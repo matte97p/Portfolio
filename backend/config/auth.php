@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -12,6 +11,10 @@ return [
     | as required, but they're a perfect start for most applications.
     |
     */
+    'passport' => [
+        'client_id' => env('PASSPORT_CLIENT_ID'),
+        'client_secret' => env('PASSPORT_CLIENT_SECRET'),
+    ],
 
     'defaults' => [
         'guard' => 'web',
@@ -31,7 +34,7 @@ return [
     | users are actually retrieved out of your database or other storage
     | mechanisms used by this application to persist your user's data.
     |
-    | Supported: "session"
+    | Supported: "session", "token"
     |
     */
 
@@ -39,6 +42,11 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users'
         ],
     ],
 
@@ -64,11 +72,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -83,10 +86,6 @@ return [
     | The expiry time is the number of minutes that each reset token will be
     | considered valid. This security feature keeps tokens short-lived so
     | they have less time to be guessed. You may change this as needed.
-    |
-    | The throttle setting is the number of seconds a user must wait before
-    | generating more password reset tokens. This prevents the user from
-    | quickly generating a very large amount of password reset tokens.
     |
     */
 
@@ -111,5 +110,14 @@ return [
     */
 
     'password_timeout' => 10800,
+
+     /*
+    |--------------------------------------------------------------------------
+    | Expires Token Verification timeout
+    |--------------------------------------------------------------------------
+    */
+    'verification' => [
+        'expire' => 525600, // One year in minutes
+    ],
 
 ];
