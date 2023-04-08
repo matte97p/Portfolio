@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <app-breadcrumb></app-breadcrumb>
+  <nav>
+    <a class="nav-item nav-link" routerLink="/home">Home</a>
+    <!-- <a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a> -->
+    <a routerLink="/user" *ngIf="authService.isAuthenticated()" routerLinkActive="active" ariaCurrentWhenActive="page">Profilo</a>
+    <a routerLink="/lista-esami" *ngIf="authService.isAuthenticated()" routerLinkActive="active" ariaCurrentWhenActive="page">Lista Esami</a>
+    <a routerLink="/professori" *ngIf="authService.isAuthenticated()"routerLinkActive="active" ariaCurrentWhenActive="page">Professori</a>
+    <!-- <a routerLink="/admin" routerLinkActive="active" ariaCurrentWhenActive="page">Admin</a> -->
+    <a routerLink="/auth/login" *ngIf="!authService.isAuthenticated()" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
+    <a routerLink="/auth/login" *ngIf="authService.isAuthenticated()" (click)="logout()" routerLinkActive="active" ariaCurrentWhenActive="page">Logout</a>
+  </nav>
+  <div [@routeAnimation]="getRouteAnimationData()">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<app-messages></app-messages>

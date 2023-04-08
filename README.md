@@ -128,9 +128,33 @@
   php
   ```
 - [Angular][angular-download]
+
   ```sh
   cd ./angular
   sudo -i npm install -g @angular/cli
+  ```
+
+- [Prime NG Angular][primeng-download]
+
+  ```sh
+  # with npm
+  npm install primeng --save
+  npm install primeng primeicons
+  npm install @angular/animations@latest --save
+
+  # with yarn
+  yarn add primeng --save
+  yarn add primeng primeicons
+  ```
+
+  ```
+
+  ```
+
+- [Angular Material][material-download]
+
+  ```sh
+  ng add @angular/material
   ```
 
 ### Installation
@@ -212,6 +236,8 @@ This section of the standard comprises what should be considered the standard co
 [php8.2-download]: https://www.php.net/downloads.php
 [composer-download]: https://getcomposer.org/download/
 [laravel10-download]: https://laravel.com/docs/10.x/installation
+[primeng-download]: https://primeng.org/installation
+[material-download]: https://material.angular.io/guide/getting-started
 
 <!-- PACKAGES -->
 

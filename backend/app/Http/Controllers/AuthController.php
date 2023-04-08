@@ -117,7 +117,6 @@ class AuthController extends Controller  {
                 'grant_type' => 'password',
                 'client_id' => $oauth_clients->id,
                 'client_secret' => $oauth_clients->secret,
-                // 'redirect_uri' => 'https://backend-libretto.test/oauth/callback',
                 'username' => $params["email"],
                 'password' => $params["password"],
                 'scope' => '*',
