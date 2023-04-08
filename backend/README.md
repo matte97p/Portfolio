@@ -43,13 +43,22 @@
 
 -   [PostgreSQL][postgresql-download]
 -   [php8.2][php8.2-download]
+    ```sh
+    LINUX -> sudo apt install php8.0-fpm
+            sudo apt install php8.0-cli php8.0-common php8.0-curl php8.0-mbstring php8.0-opcache php8.0-readline php8.0-xml php8.0-zip php8.0-mysql php8.0-gd
+    ```
 -   [composer][composer-download]
+
     ```sh
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
     php composer-setup.php
     php -r "unlink('composer-setup.php');"
+
+    LINUX -> sudo apt install curl
+            curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
     ```
+
 -   [Laravel10][laravel10-download]
     ```sh
     composer global require laravel/installer
@@ -57,13 +66,53 @@
 -   [Laravel Passport][laravel-passport-docs] -> provides a full OAuth2 server implementation
     ```sh
     composer require laravel/passport
+    php artisan migrate
     php artisan passport:install --uuids
-    php artisan passport:keys
+    php artisan passport:keys --force
     php artisan vendor:publish --tag=passport-config
     ```
--   optional [Laravel Valet][laravel-valet-docs] -> blazing fast Laravel development environment that uses roughly 7 MB of RAM
+-   optional MAC [Mac Valet][laravel-valet-docs] -> blazing fast Laravel development environment that uses roughly 7 MB of RAM
     ```sh
     composer global require laravel/valet
+    valet install
+    cd ~/Sites
+    valet park
+    ```
+-   optional LINUX [Linux Valet][linux-valet-docs] -> Valet for Ubuntu is a port of the original made specifically for Ubuntu that attempts to mirror all the features of Valet v1
+
+    ```sh
+    - Ubuntu 14.04 or below
+    sudo add-apt-repository -y ppa:nginx/stable
+    sudo apt-get update
+
+    - dependencies packages
+    sudo apt-get install network-manager libnss3-tools jq xsel
+
+    - Install PHP & its extensions
+    sudo apt install software-properties-common
+    sudo add-apt-repository ppa:ondrej/php
+    sudo apt update
+    sudo apt install php*-fpm
+    sudo apt install php*-cli php*-curl php*-mbstring php*-mcrypt php*-xml php*-zip
+
+    - MYSQL steps
+    sudo apt-get -y install mysql-server
+    sudo mysql_secure_installation
+    sudo mysql
+    mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+    mysql> FLUSH PRIVILEGES;
+    mysql> exit;
+
+    composer global require genesisweb/valet-linux-plus
+
+    valet install
+    cd ~/Sites
+    valet park
+    ```
+
+-   optional WINDOWS [Linux Valet][] -> Valet for Windows
+    ```sh
+    composer global require cretueusebiu/valet-windows
     valet install
     cd ~/Sites
     valet park
@@ -82,26 +131,26 @@
     ```sh
     cd ./angular
     sudo -i npm install -g @angular/cli
-    npm install
     ```
 
 ### Installation
 
 1. Clone the repo
     ```sh
-    git clone https://github.com/JosephTaverniti/SSM_LARAVEL_BackEnd.git
+    git clone https://github.com/matte97p/Portfolio.git
     ```
 2. Install packages into cd project_dir
     ```sh
-    composer install
+    /backend -> composer install
+    /frontend -> npm install
     ```
 3. Create DB and upload [DB Backup][]
 
     ```sh
     sudo -u postgres psql
-    CREATE DATABASE mydb;
+    CREATE DATABASE portfolio;
     CREATE USER mario with PASSWORD 'rossi';
-    GRANT ALL PRIVILEGES ON DATABASE mydb to mario;
+    GRANT ALL PRIVILEGES ON DATABASE portfolio to mario;
 
     -- on db
     CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; -- for uuid_generate_v4()
@@ -111,11 +160,11 @@
     php artisan vendor:publish --tag=telescope-migrations
     ```
 
-4. Create and start the web server for https://mypath.test/
+4. Create and start the web server for https://portfolio.test/
 
     ```sh
-    valet link mypath
-    valet secure mypath
+    valet link portfolio
+    valet secure portfolio
     ```
 
 5. Start the web server for http://localhost:8000/
@@ -168,6 +217,7 @@ This section of the standard comprises what should be considered the standard co
 
 [laravel-passport-docs]: https://laravel.com/docs/10.x/passport
 [laravel-valet-docs]: https://laravel.com/docs/10.x/valet
+[linux-valet-docs]: https://valetlinux.plus/
 [laravel-telescope-docs]: https://laravel.com/docs/10.x/telescope
 [laravel-horizon-docs]: https://laravel.com/docs/10.x/horizon
 
