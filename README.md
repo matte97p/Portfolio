@@ -45,7 +45,6 @@
 - [php8.2][php8.2-download]
   ```sh
   LINUX -> sudo apt install php8.0-fpm
-          sudo apt install php8.0-cli php8.0-common php8.0-curl php8.0-mbstring php8.0-opcache php8.0-readline php8.0-xml php8.0-zip php8.0-mysql php8.0-gd
   ```
 - [composer][composer-download]
 
@@ -184,11 +183,11 @@
    php artisan vendor:publish --tag=telescope-migrations
    ```
 
-4. Create and start the web server for https://portfolio.test/
+4. Create and start the web server for https://backend-portfolio.test/
 
    ```sh
-   valet link portfolio
-   valet secure portfolio
+   valet link backend-portfolio
+   valet secure backend-portfolio
    ```
 
 5. Start the web server for http://localhost:8000/
