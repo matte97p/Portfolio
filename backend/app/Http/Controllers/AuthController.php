@@ -41,7 +41,7 @@ class AuthController extends Controller  {
 
             return response()->json(["message" => "Registrazione riuscita!", "token" => $token], 201);
         } catch (\Exception $e) {
-            return response()->json(["message" => "Registrazione fallita!"], 500);
+            return response()->json(["message" => "Registrazione fallita!", "error" => $e->getResponse()->getBody()->getContents()], 500);
         }
     }
 
@@ -76,7 +76,7 @@ class AuthController extends Controller  {
             return response()->json(["message" => "Login riuscito!"], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Login fallito!". $e], 500);
+            return response()->json(["message" => "Login fallito!", "error" => $e->getResponse()->getBody()->getContents()], 500);
         }
     }
 
@@ -127,7 +127,7 @@ class AuthController extends Controller  {
             return Route::dispatch($proxy);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Login fallito!". $e], 500);
+            return response()->json(["message" => "Login fallito!", "error" => $e->getResponse()->getBody()->getContents()], 500);
         }
     }
 
@@ -162,7 +162,7 @@ class AuthController extends Controller  {
 
             return response()->json(["message" => ""], 201);
         } catch (\Exception $e) {
-            return response()->json(["message" => "TODO fallito!"], 500);
+            return response()->json(["message" => "TODO fallito!", "error" => $e->getResponse()->getBody()->getContents()], 500);
         }
     }
 

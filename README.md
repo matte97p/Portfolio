@@ -190,22 +190,23 @@
    valet secure backend-portfolio
    ```
 
-5. Start the web server for http://localhost:8000/
+5. Run passport OAuth2 Client [read more][https://laravel.com/docs/10.x/passport]
+
+   ```
+   php artisan passport:client --password
+   named LocalPswClient eg
+   ```
+
+6. Start the web server for http://localhost:8000/
 
    ```
    php artisan serve
    ```
 
-6. Go to /angular Start the web server for http://localhost:4200/
+7. Go to /angular Start the web server for http://localhost:4200/
 
    ```
    ng serve
-   ```
-
-7. Run passport OAuth2 Client [more][https://laravel.com/docs/10.x/passport]
-   ```
-   php artisan passport:client --password
-   named LocalPswClient eg
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

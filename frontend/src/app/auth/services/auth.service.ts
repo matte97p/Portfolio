@@ -1,16 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
 
 import { tap } from 'rxjs/operators';
 import { MessagesService } from 'src/app/services/messages.service';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    Authorization: 'my-auth-token'
-  })
-};
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +33,7 @@ export class AuthService {
   }
 
   public login(formData: any): any {
-    return this._http.post<any>(this.backend_api + this.auth_api + 'oauth2', formData, httpOptions)
+    return this._http.post<any>(this.backend_api + this.auth_api + 'oauth2', formData)
       .pipe(
         tap(
         {
