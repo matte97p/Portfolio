@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 
 import { tap } from 'rxjs/operators';
-import { MessagesService } from 'src/app/services/messages.service';
+import { MessagesService } from 'src/app/shared/services/messages.service';
 
 @Injectable({
   providedIn: 'root',

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { tap } from 'rxjs/operators';
-import { MessagesService } from 'src/app/services/messages.service';
+import { MessagesService } from 'src/app/shared/services/messages.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,7 @@ export class AuthService {
 
   constructor(
     private _http: HttpClient,
-    private messagesService: MessagesService
+    private _messagesService: MessagesService
   ) {
     this.redirectUrl = '/home'; // @todo get from role
   }
@@ -41,10 +41,10 @@ export class AuthService {
             this.setToken('access_token', data.access_token);
             this.setToken('refresh_token', data.refresh_token);
 
-            this.messagesService.success('Login', 'Login effettuato con successo!');
+            this._messagesService.success('Login', 'Login effettuato con successo!');
           },
           error: (error) => {
-            this.messagesService.error('Login', error);
+            this._messagesService.error('Login', error);
           },
         }
         )
@@ -60,10 +60,10 @@ export class AuthService {
             localStorage.removeItem('access_token')
             localStorage.removeItem('refresh_token')
 
-            this.messagesService.success('Logout', data.message);
+            this._messagesService.success('Logout', data.message);
           },
           error: (error) => {
-            this.messagesService.error('Logout', error);
+            this._messagesService.error('Logout', error);
           },
         }
         )

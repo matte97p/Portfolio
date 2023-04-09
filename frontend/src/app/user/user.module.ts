@@ -18,7 +18,7 @@ import { UserRoutingModule } from './user-routing.module';
   exports: [
   ],
   bootstrap: [
-    ProfileComponent
+    ProfileComponent,
   ]
 })
 export class UserModule { }
