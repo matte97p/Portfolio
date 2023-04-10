@@ -1,0 +1,74 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Portfolio",
+    "dateExported": "2023-04-09T16:49:03.823Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "b5c9b73a-633e-4dcb-82a2-8fc8cddeef6e",
+            "name": "Auth",
+            "containerId": "",
+            "created": "2023-04-08T22:40:19.227Z",
+            "sortNum": 10000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "a7394831-f873-4be4-a163-c72929f8cff9",
+            "colId": "08a0e770-3cac-46bb-a6b4-3d88e922bb6b",
+            "containerId": "b5c9b73a-633e-4dcb-82a2-8fc8cddeef6e",
+            "name": "Register",
+            "url": "https://backend-portfolio.test/auth/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-04-08T22:40:11.196Z",
+            "modified": "2023-04-08T22:40:22.131Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"prova\",\n  \"email\": \"prova@example.net\",\n  \"password\": \"$2y$10$\",\n  \"password_confirmation\": \"$2y$10$\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "df77081a-b06b-49c6-982b-74582315f922",
+            "colId": "08a0e770-3cac-46bb-a6b4-3d88e922bb6b",
+            "containerId": "b5c9b73a-633e-4dcb-82a2-8fc8cddeef6e",
+            "name": "Login",
+            "url": "https://backend-portfolio.test/auth/oauth2",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-04-08T22:40:24.562Z",
+            "modified": "2023-04-08T22:40:43.008Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"prova@example.net\",\n  \"password\": \"$2y$10$\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "06ae4561-0c91-4009-b921-686dcc0a5f7c",
+            "colId": "08a0e770-3cac-46bb-a6b4-3d88e922bb6b",
+            "containerId": "b5c9b73a-633e-4dcb-82a2-8fc8cddeef6e",
+            "name": "Logout",
+            "url": "https://backend-portfolio.test/auth/logout",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-04-09T16:48:14.271Z",
+            "modified": "2023-04-09T16:48:32.971Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
