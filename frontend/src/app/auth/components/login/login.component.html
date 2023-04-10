@@ -10,13 +10,11 @@
           <input pInputText type="password" placeholder="Password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
           <p-message severity="error" text="Password is required" *ngIf="submitted && f['password'].errors"></p-message>
         </div>
+        <p-captcha siteKey="6Lf2XQkTAAAAANcvOwYqPxWL4iZDksFqHpS39GDA" (onResponse)="showResponse($event)"></p-captcha>
         <div class="form-group">
           <p-button pRipple label="Login" type="submit" styleClass="p-button-success"></p-button>
         </div>
       </div>
     </form>
-  </div>
-  <div class="form-group">
-    <p-button pRipple label="Logout" (click)="logout()" styleClass="p-button-danger"></p-button>
   </div>
 </div>

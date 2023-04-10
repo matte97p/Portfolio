@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { HomepageComponent } from './components/homepage/homepage.component';
 
 import { CommonModule } from '@angular/common';
-import { AppModule } from '../app.module';
+import { SharedModule } from '../shared/shared.module';
+import { HomepageRoutingModule } from './homepage-routing.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { AppModule } from '../app.module';
   ],
   imports: [
     CommonModule,
-    AppModule,
+    HomepageRoutingModule,
+    SharedModule,
   ],
   providers: [
   ],

@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { CaptchaModule } from 'primeng/captcha';
 
 import { MessageService } from 'primeng/api';
 
@@ -22,6 +23,7 @@ import { MessageService } from 'primeng/api';
     MessageModule,
     ButtonModule,
     InputTextModule,
+    CaptchaModule,
   ],
   providers: [
     MessageService,

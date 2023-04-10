@@ -12,12 +12,12 @@ const appRoutes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./homepage/homepage.module').then(m => m.HomepageModule),
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService],
   },
   {
     path: 'user',
     loadChildren: () => import('./user/user.module').then(m => m.UserModule),
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService],
   },
   // {
   //   path: 'admin',

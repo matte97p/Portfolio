@@ -7,7 +7,7 @@
     <img src="storage/app/public/GitHub-logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Libretto</h3>
+  <h3 align="center">Portfolio</h3>
 </div>
 
 <!-- TABLE OF CONTENTS -->

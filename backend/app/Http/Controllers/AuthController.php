@@ -71,7 +71,7 @@ class AuthController extends Controller  {
 
             if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
 
-            if(!Auth::attempt($params)) return response()->json(["message" => "Login fallito!"], 403);
+            if(!Auth::attempt($params)) return response()->json(["message" => "Credenziali errate!"], 403);
 
             return response()->json(["message" => "Login riuscito!"], 201);
 
@@ -109,7 +109,7 @@ class AuthController extends Controller  {
 
             if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
 
-            if(!Auth::attempt($params)) return response()->json(["message" => "Login fallito!"], 403);
+            if(!Auth::attempt($params)) return response()->json(["message" => "Credenziali errate!"], 403);
 
             $oauth_clients = DB::table('oauth_clients')->where('name', 'LocalPswClient')->first();
 
