@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="col-md-12">
+    <form class="form-data InputTextModule" [formGroup]="form" (ngSubmit)="login()">
+      <div class="flex justify-content-center gap-2">
+        <div class="form-group">
+          <input pInputText type="text" placeholder="Email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"/>
+          <p-message severity="error" text="Email is required" *ngIf="submitted && f['email'].errors"></p-message>
+        </div>
+        <div class="form-group">
+          <input pInputText type="password" placeholder="Password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+          <p-message severity="error" text="Password is required" *ngIf="submitted && f['password'].errors"></p-message>
+        </div>
+        <p-captcha siteKey="6Lf2XQkTAAAAANcvOwYqPxWL4iZDksFqHpS39GDA" (onResponse)="showResponse($event)"></p-captcha>
+        <div class="form-group">
+          <p-button pRipple label="Login" type="submit" styleClass="p-button-success"></p-button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
