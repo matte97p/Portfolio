@@ -29,7 +29,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
 
             Route::prefix('api')
-                ->middleware('api')
+                ->middleware('cors', 'api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
 
@@ -38,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
 
             Route::prefix('')
-                ->middleware(['cors'])
+                ->middleware(['cors', 'api'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/auth.php'));
 

@@ -10,6 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CaptchaModule } from 'primeng/captcha';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../shared/utils/auth.interceptor';
 import { MessageService } from 'primeng/api';
 
 @NgModule({
@@ -26,6 +28,11 @@ import { MessageService } from 'primeng/api';
     CaptchaModule,
   ],
   providers: [
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi   : true,
+    },
     MessageService,
   ],
   exports: [

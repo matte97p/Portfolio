@@ -39,7 +39,7 @@ export class AuthService {
         {
           next: (data: any) => {
             this.setToken('access_token', data.access_token);
-            this.setToken('refresh_token', data.refresh_token);
+            // this.setToken('refresh_token', data.refresh_token);
 
             this._messagesService.success('Login', 'Login effettuato con successo!');
           },
@@ -57,13 +57,29 @@ export class AuthService {
         tap(
         {
           next: (data: any)  => {
-            localStorage.removeItem('access_token')
-            localStorage.removeItem('refresh_token')
+            localStorage.removeItem('access_token');
+            // localStorage.removeItem('refresh_token');
 
             this._messagesService.success('Logout', data.message);
           },
           error: (error) => {
             this._messagesService.error('Logout', error);
+          },
+        }
+        )
+      );
+  }
+
+  public checkToken(): any {
+    return this._http.get<any>(this.backend_api + this.auth_api + 'checkToken')
+      .pipe(
+        tap(
+        {
+          next: (data: any)  => {
+            this._messagesService.success('checkToken', data.message);
+          },
+          error: (error) => {
+            this._messagesService.error('checkToken', error);
           },
         }
         )

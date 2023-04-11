@@ -3,17 +3,35 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Carbon;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CacheController;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller  {
+
+    /**
+     * Check it's Authed
+     *
+     * @return mixed
+     *
+     * @throws Exception
+     */
+    protected function checkLogin(){
+        if (!Auth::check()) {
+            return response()->json(["message" => "Utente non loggato!", "valid" => false], 401);
+        }
+
+        return true;
+    }
 
     /**
      * Register @todo spostare su UserController
@@ -24,8 +42,7 @@ class AuthController extends Controller  {
      *
      * @throws Exception
      */
-    public function register(Request $request)
-    {
+    public function register(Request $request){
         try{
             $data = $request->validate([
                 'name' => 'required|max:255',
@@ -41,7 +58,7 @@ class AuthController extends Controller  {
 
             return response()->json(["message" => "Registrazione riuscita!", "token" => $token], 201);
         } catch (\Exception $e) {
-            return response()->json(["message" => "Registrazione fallita!", "error" => $e->getResponse()->getBody()->getContents()], 500);
+            return response()->json(["message" => "Registrazione fallita!", "error" => $e->getMessage()], 500);
         }
     }
 
@@ -76,7 +93,7 @@ class AuthController extends Controller  {
             return response()->json(["message" => "Login riuscito!"], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Login fallito!", "error" => $e->getResponse()->getBody()->getContents()], 500);
+            return response()->json(["message" => "Login fallito!", "error" => $e->getMessage()], 500);
         }
     }
 
@@ -109,7 +126,7 @@ class AuthController extends Controller  {
 
             if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
 
-            if(!Auth::attempt($params)) return response()->json(["message" => "Credenziali errate!"], 403);
+            if(!Auth::guard('web')->attempt($params)) return response()->json(["message" => "Credenziali errate!"], 403);
 
             $oauth_clients = DB::table('oauth_clients')->where('name', 'LocalPswClient')->first();
 
@@ -124,10 +141,13 @@ class AuthController extends Controller  {
 
             $proxy = Request::create('oauth/token', 'post');
 
-            return Route::dispatch($proxy);
+            $response = json_decode(Route::dispatch($proxy)->content());
+            CacheController::setCache($response->token_type, json_encode($response));
+
+            return response()->json(["message" => "Login effettuato con successo!", "access_token" => $response->access_token/*, "refresh_token" => $response->refresh_token*/], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Login fallito!", "error" => $e->getResponse()->getBody()->getContents()], 500);
+            return response()->json(["message" => "Login fallito!", "error" => $e->getMessage()], 500);
         }
     }
 
@@ -139,16 +159,16 @@ class AuthController extends Controller  {
      * @throws Exception
      */
     public function logout(){
-        if (Auth::check()) {
-            Auth::user()->token()->revoke();
-            return response()->json(["message" => "Logout effettuato con successo!"], 200);
-        }
+        if ( ($check = self::checkLogin() ) !== true) { return $check; }
 
-        return response()->json(["message" => "Utente non loggato!"], 200);
+        Auth::user()->token()->revoke();
+        CacheController::delCache("Bearer");
+
+        return response()->json(["message" => "Logout effettuato con successo!"], 200);
     }
 
     /**
-     * Check Token @todo
+     * Check Token
      *
      * @var Request $request
      *
@@ -158,11 +178,18 @@ class AuthController extends Controller  {
      */
     public function checkToken(Request $request){
         try{
-            throw new Exception("Not Implemented!", 501);
+            if ( ($check = self::checkLogin() ) !== true) { return $check; }
 
-            return response()->json(["message" => ""], 201);
+            $token = Auth::user()->token();
+
+            if (Carbon::parse($token->expires_at, 'UTC')->timestamp < Carbon::now()->timestamp || $token->revoked) {
+                return self::refreshToken($request);
+            }
+
+            return response()->json(["message" => "Token valido!", "valid" => true], 201);
+
         } catch (\Exception $e) {
-            return response()->json(["message" => "TODO fallito!", "error" => $e->getResponse()->getBody()->getContents()], 500);
+            return response()->json(["message" => "Recupero informazioni token fallito!", "error" => $e->getMessage()], 500);
         }
     }
 
@@ -181,7 +208,7 @@ class AuthController extends Controller  {
 
             $request->request->add([
                 'grant_type' => 'refresh_token',
-                'refresh_token' => $request->refresh_token,
+                'refresh_token' => json_decode(CacheController::getCache("Bearer"))->refresh_token,
                 'client_id' => $oauth_clients->id,
                 'client_secret' => $oauth_clients->secret,
                 'scope' => '*',
@@ -189,10 +216,13 @@ class AuthController extends Controller  {
 
             $proxy = Request::create('oauth/token', 'post');
 
-            return Route::dispatch($proxy);
+            $response = json_decode(Route::dispatch($proxy)->content());
+            CacheController::setCache($response->token_type, json_encode($response));
+
+            return response()->json(["message" => "Token aggiornato con successo!", "valid" => true], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Recupero refresh token fallito!", "error" => $e->getResponse()->getBody()->getContents()], 500);
+            return response()->json(["message" => "Recupero refresh token fallito!", "valid" => false, "error" => $e->getMessage()], 500);
         }
     }
 }

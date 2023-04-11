@@ -36,4 +36,16 @@ export class AppComponent {
     );
   }
 
+  checkToken(){
+    this.authService.checkToken().subscribe(
+      ( res: any) => {
+        if (!this.authService.isAuthenticated()) {
+          this.router.navigate(['/']);
+        }
+      },
+      ( err: any) => {
+      }
+    );
+  }
+
 }

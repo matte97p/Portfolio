@@ -109,13 +109,21 @@
   valet park
   ```
 
-- optional WINDOWS [Linux Valet][] -> Valet for Windows
+- optional WINDOWS [Windows Valet][] -> Valet for Windows
+
   ```sh
   composer global require cretueusebiu/valet-windows
   valet install
   cd ~/Sites
   valet park
   ```
+
+- optional [Laravel Redis][laravel-redis-docs] -> open source advanced key-value store.
+
+  ```sh
+  composer require predis/predis
+  ```
+
 - optional [Laravel Telescope][laravel-telescope-docs] -> Telescope provides insight into the requests coming into your application and more.
   ```sh
   composer require laravel/telescope
@@ -144,10 +152,6 @@
   # with yarn
   yarn add primeng --save
   yarn add primeng primeicons
-  ```
-
-  ```
-
   ```
 
 - [Angular Material][material-download]
@@ -244,6 +248,7 @@ This section of the standard comprises what should be considered the standard co
 [laravel-passport-docs]: https://laravel.com/docs/10.x/passport
 [laravel-valet-docs]: https://laravel.com/docs/10.x/valet
 [linux-valet-docs]: https://valetlinux.plus/
+[laravel-redis-docs]: https://laravel.com/docs/10.x/redis
 [laravel-telescope-docs]: https://laravel.com/docs/10.x/telescope
 [laravel-horizon-docs]: https://laravel.com/docs/10.x/horizon
 
