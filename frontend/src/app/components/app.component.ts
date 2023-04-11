@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChildrenOutletContexts, Router } from '@angular/router';
 import { AuthService } from '../auth/services/auth.service';
 import { slideInAnimation } from '../shared/utils/animations';
+import { Subscription, map, timer } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +10,10 @@ import { slideInAnimation } from '../shared/utils/animations';
   styleUrls: ['./app.component.scss'],
   animations: [ slideInAnimation ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  public title = 'Area Riservata'
+  public title = 'Area Riservata';
+  private timerSubscription: Subscription | undefined;
 
   constructor(
     private _contexts: ChildrenOutletContexts,
@@ -19,33 +21,32 @@ export class AppComponent {
     public router: Router,
   ) {}
 
+  ngOnInit(): void {
+    /* @todo set timed option to 30s?? */
+     this.timerSubscription = timer(0, 10000).pipe(
+      map(() => {
+        if(this.router.url == '/auth/login') return;
+        this.authService.checkToken().subscribe(
+          (res: any) => {},
+          (err: any) => {}
+        );
+      })
+    ).subscribe();
+  }
+
   getRouteAnimationData() {
     return this._contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
   }
 
   logout() {
     this.authService.logout().subscribe(
-      ( res: any) => {
-        if (!this.authService.isAuthenticated()) {
-          this.router.navigate(['/']);
-        }
-      },
-      ( err: any) => {
-        //
-      }
+      (res: any) => {},
+      (err: any) => {}
     );
   }
 
-  checkToken(){
-    this.authService.checkToken().subscribe(
-      ( res: any) => {
-        if (!this.authService.isAuthenticated()) {
-          this.router.navigate(['/']);
-        }
-      },
-      ( err: any) => {
-      }
-    );
+  ngOnDestroy(): void {
+    this.timerSubscription?.unsubscribe();
   }
 
 }

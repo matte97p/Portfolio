@@ -26,9 +26,26 @@
             "headers": [],
             "params": [],
             "body": {
-                "type": "json",
-                "raw": "{\n  \"name\": \"prova\",\n  \"email\": \"prova@example.net\",\n  \"password\": \"$2y$10$\",\n  \"password_confirmation\": \"$2y$10$\"\n}",
-                "form": []
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "name",
+                        "value": "prova"
+                    },
+                    {
+                        "name": "email",
+                        "value": "prova@example.net"
+                    },
+                    {
+                        "name": "password",
+                        "value": "$2y$10$"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "value": "$2y$10$"
+                    }
+                ]
             },
             "tests": []
         },

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { MessagesService } from 'src/app/shared/services/messages.service';
 
@@ -25,24 +24,20 @@ export class LoginComponent {
   }
 
   constructor(
-    private router: Router,
     private authService: AuthService,
-    private _messagesService: MessagesService
+    private _messagesService: MessagesService,
   ) {}
 
   login(){
     this.submitted = true;
+
     if (this.form.invalid) {
       return;
     }
 
     this.authService.login(this.form.value).subscribe(
-      ( res: any) => {
-        if (this.authService.isAuthenticated()) {
-          this.router.navigate([this.authService.getRedirectUrl]);
-        }
-      },
-      ( err: any) => {
+      (res: any) => {},
+      (err: any) => {
         this.form.reset()
       }
     );

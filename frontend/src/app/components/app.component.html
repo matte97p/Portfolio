@@ -8,7 +8,6 @@
     <!-- <a routerLink="/admin" routerLinkActive="active" ariaCurrentWhenActive="page">Admin</a> -->
     <a routerLink="/auth/login" *ngIf="!authService.isAuthenticated()" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
     <a routerLink="/auth/login" *ngIf="authService.isAuthenticated()" (click)="logout()" routerLinkActive="active" ariaCurrentWhenActive="page">Logout</a>
-    <p-button (onClick)="checkToken()">Check Token</p-button>
   </nav>
   <div [@routeAnimations]="getRouteAnimationData()">
     <router-outlet></router-outlet>
