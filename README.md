@@ -227,6 +227,9 @@
 [PSR 12 DOCS][psr12-docs]
 This section of the standard comprises what should be considered the standard coding elements that are required to ensure a high level of technical interoperability between shared PHP code.
 
+[Angular coding style][angular-naming-docs]
+Each guideline describes either a good or bad practice, and all have a consistent presentation.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -238,6 +241,7 @@ This section of the standard comprises what should be considered the standard co
 [laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
 [laravel-docs]: https://laravel.com
 [psr12-docs]: https://www.php-fig.org/psr/psr-12/
+[angular-naming-docs]: https://angular.io/guide/styleguide
 
 <!-- DOWNLOAD -->
 

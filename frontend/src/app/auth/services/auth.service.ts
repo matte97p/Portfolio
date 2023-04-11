@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { tap } from 'rxjs/operators';
 import { MessagesService } from 'src/app/shared/services/messages.service';
@@ -11,25 +12,20 @@ export class AuthService {
 
   private backend_api = 'https://backend-portfolio.test/';
   private auth_api = 'auth/';
-  private redirectUrl: string | null = null;
+  private redirectUrl: string | null = '/home'; // @todo get from role
 
   constructor(
+    private _router: Router,
     private _http: HttpClient,
     private _messagesService: MessagesService
-  ) {
-    this.redirectUrl = '/home'; // @todo get from role
-  }
+  ) { }
 
   static getToken() {
     return localStorage.getItem('access_token')
   }
 
-  get getRedirectUrl() {
-    return this.redirectUrl
-  }
-
   public isAuthenticated(): boolean {
-    return !!localStorage.getItem('access_token')
+    return !!localStorage.getItem('access_token');
   }
 
   public login(formData: any): any {
@@ -39,9 +35,9 @@ export class AuthService {
         {
           next: (data: any) => {
             this.setToken('access_token', data.access_token);
-            // this.setToken('refresh_token', data.refresh_token);
 
             this._messagesService.success('Login', data.message);
+            this.redirect(true);
           },
           error: (error) => {
             this._messagesService.error('Login', error);
@@ -58,12 +54,15 @@ export class AuthService {
         {
           next: (data: any)  => {
             localStorage.removeItem('access_token');
-            // localStorage.removeItem('refresh_token');
 
             this._messagesService.success('Logout', data.message);
+            this.redirect();
           },
           error: (error) => {
             this._messagesService.error('Logout', error);
+
+            localStorage.removeItem('access_token');
+            this.redirect();
           },
         }
         )
@@ -77,16 +76,26 @@ export class AuthService {
         {
           next: (data: any)  => {
             this._messagesService.success('checkToken', data.message);
+
+            if(data.access_token) this.setToken('access_token', data.access_token);
           },
           error: (error) => {
             this._messagesService.error('checkToken', error);
+
+            localStorage.removeItem('access_token');
+            this.redirect();
           },
         }
         )
       );
   }
 
-  protected setToken (type: string, token: string): void {
+  protected setToken(type: string, token: string): void {
     localStorage.setItem(type, token)
+  }
+
+  protected redirect(force = false){
+    if(!this.isAuthenticated()) this._router.navigate(['/']);
+    if(force) this._router.navigate([this.redirectUrl]);
   }
 }

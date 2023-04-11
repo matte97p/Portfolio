@@ -8,24 +8,28 @@ const appRoutes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+    data: { animation: 'Login' }
   },
   {
     path: 'home',
     loadChildren: () => import('./homepage/homepage.module').then(m => m.HomepageModule),
     canActivate: [AuthGuardService],
+    data: { animation: 'HomePage' }
   },
   {
     path: 'user',
     loadChildren: () => import('./user/user.module').then(m => m.UserModule),
     canActivate: [AuthGuardService],
+    data: { animation: 'User' }
   },
   // {
   //   path: 'admin',
   //   loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
-    // canActivate: [AuthGuardService]
+  //   canActivate: [AuthGuardService],
+  //   data: { animation: 'Admin' }
   // },
   { path: '',   redirectTo: '/auth/login', pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent, data: { animation: '404' } }
 ];
 
 @NgModule({

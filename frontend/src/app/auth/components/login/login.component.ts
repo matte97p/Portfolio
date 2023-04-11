@@ -25,24 +25,20 @@ export class LoginComponent {
   }
 
   constructor(
-    private router: Router,
     private authService: AuthService,
-    private _messagesService: MessagesService
+    private _messagesService: MessagesService,
   ) {}
 
   login(){
     this.submitted = true;
+
     if (this.form.invalid) {
       return;
     }
 
     this.authService.login(this.form.value).subscribe(
-      ( res: any) => {
-        if (this.authService.isAuthenticated()) {
-          this.router.navigate([this.authService.getRedirectUrl]);
-        }
-      },
-      ( err: any) => {
+      (res: any) => {},
+      (err: any) => {
         this.form.reset()
       }
     );

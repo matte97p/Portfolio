@@ -19,39 +19,37 @@ use GuzzleHttp\RequestOptions;
 
 class AuthController extends AbstractController  {
 
-    private static $oauth_client = [
-        // 0 => 'ProdOauthClient', //prod @todo decommentare
-        0 => 'LocalPswClient',  //prod
-        1 => 'LocalPswClient'   //test
-    ];
-
-    protected static $base_uri = [
-        // 0 => 'https://backend-portfolio.com',   //prod @todo decommentare
-        0 => 'https://backend-portfolio.test/',  //prod
-        1 => 'https://backend-portfolio.test/'  //test
-    ];
-
     /**
      * @var OauthClient
      */
     private $oauth_clients;
 
+    private static $oauth_client = [
+        0 => 'ProdOauthClient', //prod
+        1 => 'LocalPswClient'   //test
+    ];
+
+    protected static $base_uri = [
+        0 => 'https://backend-portfolio.com',   //prod
+        1 => 'https://backend-portfolio.test/'  //test
+    ];
+
     /**
-     * Set the $oauth_clients
+     * Custom __construct + parent
      *
-     * @param bool $test_environment
-     *
-     * @return void
+     * @var Request $request
      */
-    private function getOauthClients()
+    public function __construct(Request $request)
     {
+        parent::__construct($request);
+
         $this->oauth_clients = DB::table('oauth_clients')
         ->where('name', self::$oauth_client[ (int) $this->test_environment ] )
         ->first();
     }
 
     /**
-     * Get Controller BaseUri
+     * Get Controller $base_uri
      *
      * @return string
      */
@@ -61,22 +59,7 @@ class AuthController extends AbstractController  {
     }
 
     /**
-     * Check it's Authed
-     *
-     * @return Response|bool
-     *
-     * @throws Exception
-     */
-    private function checkLogged(){
-        if (!Auth::check()) {
-            return response()->json(["message" => "Utente non loggato!"], 401);
-        }
-
-        return true;
-    }
-
-    /**
-     * Login
+     * Login password
      *
      * @var Request $request
      *
@@ -114,23 +97,18 @@ class AuthController extends AbstractController  {
     /**
      * Refresh Token
      *
-     * @var Request $request
-     * @var obj $token
-     *
      * @return Response
      *
      * @throws Exception
      */
-    private function refreshToken(Request $request, $token){
+    private function refreshToken(){
         try {
-            self::getOauthClients(true); /* @todo da fare nel costructor */
-
             $parameters =
             [
                 RequestOptions::JSON =>
                 [
                     'grant_type' => 'refresh_token',
-                    'refresh_token' => json_decode(CacheController::getCache("Bearer"))->refresh_token,
+                    'refresh_token' => json_decode(CacheController::getCache("Bearer." . Auth::id()))->refresh_token,
                     'client_id' => $this->oauth_clients->id,
                     'client_secret' => $this->oauth_clients->secret,
                     'scope' => '*',
@@ -140,10 +118,9 @@ class AuthController extends AbstractController  {
             $response = $this->request('post', 'oauth/token', $parameters);
 
             $response = json_decode((string) $response->getBody());
+            CacheController::setCache("Bearer." . Auth::id(), json_encode($response));
 
-            CacheController::setCache($response->token_type, json_encode($response));
-
-            return response()->json(["message" => "Token aggiornato con successo!"], 201);
+            return response()->json(["message" => "Token aggiornato con successo!", "access_token" => $response->access_token], 201);
 
         } catch (\Exception $e) {
             return response()->json(["message" => "Recupero refresh token fallito!", "error" => $e->getMessage()], 500);
@@ -167,8 +144,6 @@ class AuthController extends AbstractController  {
 
             if ( ($check = self::basicAuth($request) ) !== true) { return $check; }
 
-            self::getOauthClients(true); /* @todo da fare nel costructor */
-
             $parameters =
             [
                 RequestOptions::JSON =>
@@ -186,9 +161,9 @@ class AuthController extends AbstractController  {
 
             $response = json_decode((string) $response->getBody());
 
-            CacheController::setCache($response->token_type, json_encode($response));
+            CacheController::setCache($response->token_type . "." . Auth::guard('web')->id(), json_encode($response));
 
-            return response()->json(["message" => "Login effettuato con successo!", "access_token" => $response->access_token/*, "refresh_token" => $response->refresh_token*/], 201);
+            return response()->json(["message" => "Login effettuato con successo!", "access_token" => $response->access_token], 201);
 
         } catch (\Exception $e) {
             return response()->json(["message" => "Login fallito!", "error" => $e->getMessage()], 500);
@@ -203,10 +178,10 @@ class AuthController extends AbstractController  {
      * @throws Exception
      */
     public function logout(){
-        if ( ($check = self::checkLogged() ) !== true) { return $check; }
+        if ( ($check = UserController::checkLogged() ) !== true) { return $check; }
 
         Auth::user()->token()->revoke();
-        CacheController::delCache("Bearer");
+        CacheController::delCache("Bearer." . Auth::id());
 
         return response()->json(["message" => "Logout effettuato con successo!"], 200);
     }
@@ -222,45 +197,18 @@ class AuthController extends AbstractController  {
      */
     public function checkToken(Request $request){
         try{
-            if ( ($check = self::checkLogged() ) !== true) { return $check; }
+            if ( ($check = UserController::checkLogged() ) !== true) { return $check; }
 
             $token = Auth::user()->token();
 
-            // if (Carbon::parse($token->expires_at, 'UTC')->timestamp < Carbon::now()->timestamp || $token->revoked) {
-                return self::refreshToken($request, $token);
-            // }
+            if (Carbon::parse($token->expires_at, 'UTC')->subSeconds(60)->timestamp < Carbon::now()->timestamp) {
+                return self::refreshToken();
+            }
 
             return response()->json(["message" => "Token valido!"], 201);
 
         } catch (\Exception $e) {
             return response()->json(["message" => "Recupero informazioni token fallito!", "error" => $e->getMessage()], 500);
-        }
-    }
-
-    /**
-     * Register @todo spostare su UserController
-     *
-     * @var Request $request
-     *
-     * @return Response
-     *
-     * @throws Exception
-     */
-    public function register(Request $request){
-        try{
-            $data = $request->validate([
-                'name' => 'required|max:255',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|confirmed'
-            ]);
-
-            $data['password'] = bcrypt($request->password);
-
-            $user = User::create($data);
-
-            return response()->json(["message" => "Registrazione riuscita!"], 201);
-        } catch (\Exception $e) {
-            return response()->json(["message" => "Registrazione fallita!", "error" => $e->getMessage()], 500);
         }
     }
 }

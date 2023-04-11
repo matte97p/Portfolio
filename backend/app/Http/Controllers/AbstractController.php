@@ -43,10 +43,9 @@ abstract class AbstractController extends BaseController
      */
     protected $logger;
 
-
     public function __construct(Request $request)
     {
-        $this->test_environment = $request->header()->testing ?? false;
+        $this->test_environment = isset($request->header()["testing"][0]) ?? false;
 
         $this->logger = new Logger(
             'Portfolio', //filename
