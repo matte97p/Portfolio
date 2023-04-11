@@ -34,7 +34,7 @@ class CacheController extends Controller  {
      * @return void
      */
     static function setCache($type, $value){
-        Cache::store('redis')->put($type . Auth::id(), $value, 600);
+        Cache::store('redis')->put(trim($type) . (Auth::guard('web')->id() ?? Auth::guard('api')->id()), $value, 600);
     }
 
     /**
@@ -45,7 +45,7 @@ class CacheController extends Controller  {
      * @return mixed
      */
     static function getCache($type){
-        return Cache::store('redis')->get($type . Auth::id());
+        return Cache::store('redis')->get($type . Auth::guard('api')->id());
     }
 
     /**

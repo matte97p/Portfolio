@@ -41,7 +41,7 @@ export class AuthService {
             this.setToken('access_token', data.access_token);
             // this.setToken('refresh_token', data.refresh_token);
 
-            this._messagesService.success('Login', 'Login effettuato con successo!');
+            this._messagesService.success('Login', data.message);
           },
           error: (error) => {
             this._messagesService.error('Login', error);
