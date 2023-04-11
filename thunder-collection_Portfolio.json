@@ -1,28 +1,28 @@
 {
     "client": "Thunder Client",
     "collectionName": "Portfolio",
-    "dateExported": "2023-04-09T16:49:03.823Z",
+    "dateExported": "2023-04-11T01:42:13.108Z",
     "version": "1.1",
     "folders": [
         {
-            "_id": "b5c9b73a-633e-4dcb-82a2-8fc8cddeef6e",
+            "_id": "2f5cb742-62da-4fa1-9fa5-bb7f210cb146",
             "name": "Auth",
             "containerId": "",
-            "created": "2023-04-08T22:40:19.227Z",
+            "created": "2023-04-10T21:27:02.934Z",
             "sortNum": 10000
         }
     ],
     "requests": [
         {
-            "_id": "a7394831-f873-4be4-a163-c72929f8cff9",
-            "colId": "08a0e770-3cac-46bb-a6b4-3d88e922bb6b",
-            "containerId": "b5c9b73a-633e-4dcb-82a2-8fc8cddeef6e",
+            "_id": "3e9946c9-dc9a-4a76-bb7a-dfe08889fdcc",
+            "colId": "37b01520-06f6-441b-a595-f4387189d3b9",
+            "containerId": "2f5cb742-62da-4fa1-9fa5-bb7f210cb146",
             "name": "Register",
             "url": "https://backend-portfolio.test/auth/register",
             "method": "POST",
             "sortNum": 10000,
-            "created": "2023-04-08T22:40:11.196Z",
-            "modified": "2023-04-08T22:40:22.131Z",
+            "created": "2023-04-10T21:27:02.934Z",
+            "modified": "2023-04-10T21:27:02.934Z",
             "headers": [],
             "params": [],
             "body": {
@@ -33,15 +33,15 @@
             "tests": []
         },
         {
-            "_id": "df77081a-b06b-49c6-982b-74582315f922",
-            "colId": "08a0e770-3cac-46bb-a6b4-3d88e922bb6b",
-            "containerId": "b5c9b73a-633e-4dcb-82a2-8fc8cddeef6e",
+            "_id": "d5a38590-9fb8-4265-a079-042ce91b2d3c",
+            "colId": "37b01520-06f6-441b-a595-f4387189d3b9",
+            "containerId": "2f5cb742-62da-4fa1-9fa5-bb7f210cb146",
             "name": "Login",
             "url": "https://backend-portfolio.test/auth/oauth2",
             "method": "POST",
             "sortNum": 20000,
-            "created": "2023-04-08T22:40:24.562Z",
-            "modified": "2023-04-08T22:40:43.008Z",
+            "created": "2023-04-10T21:27:02.935Z",
+            "modified": "2023-04-10T21:52:51.666Z",
             "headers": [],
             "params": [],
             "body": {
@@ -52,15 +52,53 @@
             "tests": []
         },
         {
-            "_id": "06ae4561-0c91-4009-b921-686dcc0a5f7c",
-            "colId": "08a0e770-3cac-46bb-a6b4-3d88e922bb6b",
-            "containerId": "b5c9b73a-633e-4dcb-82a2-8fc8cddeef6e",
+            "_id": "8c1ec474-5e05-4571-a767-f2b686e2efaa",
+            "colId": "37b01520-06f6-441b-a595-f4387189d3b9",
+            "containerId": "2f5cb742-62da-4fa1-9fa5-bb7f210cb146",
             "name": "Logout",
             "url": "https://backend-portfolio.test/auth/logout",
             "method": "GET",
             "sortNum": 30000,
-            "created": "2023-04-09T16:48:14.271Z",
-            "modified": "2023-04-09T16:48:32.971Z",
+            "created": "2023-04-10T21:27:02.936Z",
+            "modified": "2023-04-10T21:27:02.936Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "d686ed52-bc5b-4423-b8a2-60c20a269ae7",
+            "colId": "37b01520-06f6-441b-a595-f4387189d3b9",
+            "containerId": "2f5cb742-62da-4fa1-9fa5-bb7f210cb146",
+            "name": "CheckToken",
+            "url": "https://backend-portfolio.test/auth/checkToken",
+            "method": "GET",
+            "sortNum": 37500,
+            "created": "2023-04-11T01:40:53.808Z",
+            "modified": "2023-04-11T01:40:53.808Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "16ae4769-f4b4-4e73-85c0-753493cb0345",
+            "colId": "37b01520-06f6-441b-a595-f4387189d3b9",
+            "containerId": "2f5cb742-62da-4fa1-9fa5-bb7f210cb146",
+            "name": "Redis check",
+            "url": "https://backend-portfolio.test/auth/redis_test",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2023-04-10T21:27:07.083Z",
+            "modified": "2023-04-10T21:27:15.299Z",
             "headers": [],
             "params": [],
             "body": {
