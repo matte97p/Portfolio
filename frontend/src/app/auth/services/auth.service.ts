@@ -34,9 +34,9 @@ export class AuthService {
         tap(
         {
           next: (data: any) => {
-            this.setToken('access_token', data.access_token);
-
             this._messagesService.success('Login', data.message);
+
+            this.setToken('access_token', data.access_token);
             this.redirect(true);
           },
           error: (error) => {
@@ -53,9 +53,9 @@ export class AuthService {
         tap(
         {
           next: (data: any)  => {
-            localStorage.removeItem('access_token');
-
             this._messagesService.success('Logout', data.message);
+
+            localStorage.removeItem('access_token');
             this.redirect();
           },
           error: (error) => {
