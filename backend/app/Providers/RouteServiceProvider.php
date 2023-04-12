@@ -46,9 +46,14 @@ class RouteServiceProvider extends ServiceProvider
 
             /* Pages */
                 Route::prefix('api/')
-                    ->middleware(['cors', 'api','auth:passport'])
+                    ->middleware(['cors', 'api'])
                     ->namespace($this->namespace)
                     ->group(base_path('routes/users.php'));
+
+                Route::prefix('api/')
+                    ->middleware(['cors', 'api'])
+                    ->namespace($this->namespace)
+                    ->group(base_path('routes/role.php'));
             /* Pages */
         });
     }

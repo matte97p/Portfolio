@@ -18,4 +18,3 @@ use App\Http\Controllers\CacheController;
 
 Route::get('/', function() { echo "Buongiorno"; });
 Route::get('/php', function() { echo phpinfo(); });
-Route::get('/redis_test', [CacheController::class, 'redis_test']);

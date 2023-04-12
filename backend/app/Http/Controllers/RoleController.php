@@ -3,50 +3,42 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AbstractCrudController;
 
-class UserController extends AbstractCrudController
-{
+class RoleController extends AbstractCrudController {
+
     /**
-     * Check it's Authed
+     * Custom __construct + parent
      *
-     * @return Response|bool
-     *
-     * @throws Exception
+     * @var Request $request
      */
-    public static function checkLogged()
+    public function __construct(Request $request)
     {
-        if (!Auth::check()) {
-            return response()->json(["message" => "Utente non loggato!"], 401);
-        }
-
-        return true;
+        parent::__construct($request);
     }
 
     /**
      * @var Request $request
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function create(Request $request): Response
     {
         try{
-            $data = $request->validate([
-                'name' => 'required|max:255',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|confirmed'
-            ]);
+            $idUtente = $req->input('idutente');
+            $ruolo = $req->input('ruolo');
 
-            $data['password'] = bcrypt($request->password);
+            $ruoloList = new utenti_ruoli_lista;
+            $ruoloList->idutente = $idUtente;
+            $ruoloList->idruolo = $ruolo;
+            $ruoloList->save();
 
-            $user = User::create($data);
-
-            return response()->json(["message" => "Registrazione riuscita!"], 201);
+            return response()->json(["message" => "Ruoli aggiornati con successo!"], 201);
         } catch (\Exception $e) {
-            return response()->json(["message" => "Registrazione fallita!", "error" => $e->getMessage()], 500);
+            return response()->json(["message" => "Aggiornamento ruoli fallito!"], 500);
         }
     }
 
