@@ -62,11 +62,12 @@ class AuthController extends AbstractApiController
      *
      * @var Request $request
      *
-     * @return Response|bool
+     * @return JsonResponse|bool
      *
      * @throws Exception
      */
-    private function basicAuth(Request $request){
+    private function basicAuth(Request $request): JsonResponse|bool
+    {
         try{
             $params = $request->all();
 
@@ -96,11 +97,12 @@ class AuthController extends AbstractApiController
     /**
      * Refresh Token
      *
-     * @return Response
+     * @return JsonResponse
      *
      * @throws Exception
      */
-    private function refreshToken(){
+    private function refreshToken(): JsonResponse
+    {
         try {
             $parameters =
             [
@@ -127,17 +129,16 @@ class AuthController extends AbstractApiController
     }
 
     /**
-     * Login OAuth2
-     *
-     * oauth/token Passport
+     * Login OAuth2 -> oauth/token Passport
      *
      * @var Request $request
      *
-     * @return Response
+     * @return JsonResponse
      *
      * @throws Exception
      */
-    public function oauth2(Request $request){
+    public function oauth2(Request $request): JsonResponse
+    {
         try{
             $params = $request->all();
 
@@ -172,11 +173,11 @@ class AuthController extends AbstractApiController
     /**
      * Logout
      *
-     * @return Response
-     *
+     * @return JsonResponse
      * @throws Exception
      */
-    public function logout(){
+    public function logout(): JsonResponse
+    {
         if ( ($check = UserController::checkLogged() ) !== true) { return $check; }
 
         Auth::user()->token()->revoke();
@@ -189,16 +190,13 @@ class AuthController extends AbstractApiController
      * Check Token
      *
      * @var Request $request
-     *
-     * @return Response
-     *
+     * @return JsonResponse
      * @throws Exception
      */
-    public function checkToken(Request $request){
+    public function checkToken(Request $request): JsonResponse
+    {
         try{
             if ( ($check = UserController::checkLogged() ) !== true) { return $check; }
-
-            $token = Auth::user()->token();
 
             if (Carbon::parse(Auth::user()->token()->expires_at, 'UTC')->subMinutes(5)->timestamp < Carbon::now()->timestamp) {
                 return self::refreshToken();

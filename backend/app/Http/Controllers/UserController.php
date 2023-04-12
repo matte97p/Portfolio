@@ -3,35 +3,21 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AbstractCrudController;
 
 class UserController extends AbstractCrudController
 {
-    /**
-     * Check it's Authed
-     *
-     * @return Response|bool
-     *
-     * @throws Exception
-     */
-    public static function checkLogged()
-    {
-        if (!Auth::check()) {
-            return response()->json(["message" => "Utente non loggato!"], 401);
-        }
 
-        return true;
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
     }
 
-    /**
-     * @var Request $request
-     * @return Response
-     * @throws Exception
-     */
-    public function create(Request $request): Response
+    public function create(Request $request): JsonResponse
     {
         try{
             $data = $request->validate([
@@ -50,26 +36,18 @@ class UserController extends AbstractCrudController
         }
     }
 
-    /**
-     * @var Request $request
-     * @return Response
-     * @throws Exception
-     */
-    public function index(Request $request): Response
+    /* @todo */
+    public function index(Request $request): JsonResponse
     {
         try{
             throw new Exception('Not implemented');
         } catch (\Exception $e) {
-            return response()->json(["message" => "Ricerca fallito!", "error" => $e->getMessage()], 500);
+            return response()->json(["message" => "Ricerca fallita!", "error" => $e->getMessage()], 500);
         }
     }
 
-    /**
-     * @var Request $request
-     * @return Response
-     * @throws Exception
-     */
-    public function update(Request $request): Response
+    /* @todo */
+    public function update(Request $request): JsonResponse
     {
         try{
             throw new Exception('Not implemented');
@@ -78,17 +56,29 @@ class UserController extends AbstractCrudController
         }
     }
 
-    /**
-     * @var Request $request
-     * @return Response
-     * @throws Exception
-     */
-    public function delete(Request $request): Response
+    /* @todo */
+    public function delete(Request $request): JsonResponse
     {
         try{
             throw new Exception('Not implemented');
         } catch (\Exception $e) {
             return response()->json(["message" => "Cancellazione fallita!", "error" => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Check it's Authed
+     *
+     * @return JsonResponse|bool
+     *
+     * @throws Exception
+     */
+    public static function checkLogged(): JsonResponse|bool
+    {
+        if (!Auth::check()) {
+            return response()->json(["message" => "Utente non loggato!"], 401);
+        }
+
+        return true;
     }
 }

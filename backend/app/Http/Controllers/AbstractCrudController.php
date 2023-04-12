@@ -6,7 +6,7 @@ use GuzzleHttp\Utils;
 use GuzzleHttp\Client;
 use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -15,8 +15,6 @@ use Illuminate\Routing\Controller as BaseController;
  */
 abstract class AbstractCrudController extends BaseController
 {
-    const UA = 'Nomos';
-
     protected $test_environment = false;
     protected ?Client $client = null;
     protected ?Request $request = null;
@@ -31,15 +29,20 @@ abstract class AbstractCrudController extends BaseController
         $uri = $this->request->url() ?? null;
 
         $this->logger = new Logger(
-            'NomosInternal', //filename
+            env('APP_NAME'). 'Internal', //filename
             '' //subpath
         );
     }
 
-    abstract protected function create(Request $request):Response;  //C
-    abstract protected function index(Request $request):Response;   //R
-    abstract protected function update(Request $request):Response;  //U
-    abstract protected function delete(Request $request):Response;  //D
+    /**
+     * @var Request $request
+     * @return Response
+     * @throws Exception
+     */
+    abstract protected function create(Request $request):JsonResponse;  //C
+    abstract protected function index(Request $request):JsonResponse;   //R
+    abstract protected function update(Request $request):JsonResponse;  //U
+    abstract protected function delete(Request $request):JsonResponse;  //D
 
     /**
      * @todo
@@ -48,8 +51,8 @@ abstract class AbstractCrudController extends BaseController
      */
     protected function request()
     {
-        $data = $this->request->json() ?? null;
-        $uri = $this->request->url() ?? null;
+        $data = $this->request->json() ?? [];
+        $uri = $this->request->url();
 
         $logger = $this->logger;
         $process_mark = $logger->getProcessMark();
