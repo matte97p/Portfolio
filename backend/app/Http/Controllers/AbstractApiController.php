@@ -2,60 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Utils;
+use GuzzleHttp\Client;
+use App\Utils\Logger\Logger;
+use Illuminate\Http\Request;
+use GuzzleHttp\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-
-    use GuzzleHttp\Client;
-    use GuzzleHttp\Exception\ClientException;
-    use GuzzleHttp\Exception\ConnectException;
-    use GuzzleHttp\Psr7\Request as GuzzleRequest;
-    use Illuminate\Http\Request;
-    use GuzzleHttp\RequestOptions;
-    use GuzzleHttp\Utils;
-    use Illuminate\Support\Facades\DB;
-    use Psr\Http\Message\ResponseInterface;
-    use App\Utils\Logger\Logger;
-
 /**
- * Class AbstractController
  * @author Matteo Perino
  */
-abstract class AbstractController extends BaseController
+abstract class AbstractApiController extends BaseController
 {
-
     const UA = 'Portfolio';
 
-    /**
-     * @var OauthClient
-     */
     protected $test_environment = false;
-
-    /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
-     * @var Logger
-     */
-    protected $logger;
+    protected ?Client $client = null;
+    protected ?Logger $logger = null;
 
     public function __construct(Request $request)
     {
         $this->test_environment = isset($request->header()["testing"][0]) ?? false;
 
         $this->logger = new Logger(
-            'Portfolio', //filename
+            'PortfolioApi', //filename
             '' //subpath
         );
     }
 
     /**
      * @return Client
-
+     *
      * @throws \Exception
      */
     public function getClient(): Client
@@ -101,9 +85,9 @@ abstract class AbstractController extends BaseController
      * @param string $method
      * @param string $uri
      * @param array $data
-
+     *
      * @return \Psr\Http\Message\ResponseInterface
-
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function request(string $method, string $uri, array $data = [] )

@@ -3,22 +3,21 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Carbon;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
-use App\Http\Controllers\AbstractController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CacheController;
 use Illuminate\Support\Facades\Validator;
-use GuzzleHttp\RequestOptions;
+use App\Http\Controllers\AbstractApiController;
 
-class AuthController extends AbstractController  {
-
+class AuthController extends AbstractApiController
+{
     /**
      * @var OauthClient
      */
