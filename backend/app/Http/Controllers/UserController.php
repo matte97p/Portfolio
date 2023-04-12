@@ -8,7 +8,8 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller {
+class UserController extends AbstractCrudController
+{
 
     /**
      * Check it's Authed
@@ -34,7 +35,7 @@ class UserController extends Controller {
      *
      * @throws Exception
      */
-    public function register(Request $request){
+    public function create(Request $request){
         try{
             $data = $request->validate([
                 'name' => 'required|max:255',

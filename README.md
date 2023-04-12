@@ -223,6 +223,11 @@
    ng serve
    ```
 
+8. Take a minute, go on your backend dir and do that before start programming
+   ```
+   php artisan inspire
+   ```
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Coding Guide Line -->

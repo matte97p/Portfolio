@@ -39,7 +39,7 @@ abstract class AbstractApiController extends BaseController
 
     /**
      * @return Client
-     *
+     *
      * @throws \Exception
      */
     public function getClient(): Client
@@ -85,9 +85,9 @@ abstract class AbstractApiController extends BaseController
      * @param string $method
      * @param string $uri
      * @param array $data
-     *
+     *
      * @return \Psr\Http\Message\ResponseInterface
-     *
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function request(string $method, string $uri, array $data = [] )
@@ -134,8 +134,8 @@ abstract class AbstractApiController extends BaseController
     }
 
     /**
-     * Log request object
-     *
+     * Log request object
+     *
      * @param array $options
      * @param string $uri
      *
@@ -172,8 +172,8 @@ abstract class AbstractApiController extends BaseController
     }
 
     /**
-     * Log response object
-     *
+     * Log response object
+     *
      * @param string|ResponseInterface $response
      * @param string $uri
      *
@@ -203,8 +203,8 @@ abstract class AbstractApiController extends BaseController
     }
 
     /**
-     * Log action
-     *
+     * Log action
+     *
      * @param string $log_entry
      * @param string $process_mark
      * @param string $action
