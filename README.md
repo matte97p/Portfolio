@@ -74,7 +74,12 @@
   ```sh
   composer require guzzlehttp/guzzle
   ```
-  composer require guzzlehttp/guzzle
+- [Spartie][spartie-docs] -> allows you to manage user permissions and roles in a database
+  ```sh
+  composer require spatie/laravel-permission
+  php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+  php artisan migrate
+  ```
 - optional MAC [Mac Valet][laravel-valet-docs] -> blazing fast Laravel development environment that uses roughly 7 MB of RAM
   ```sh
   composer global require laravel/valet
@@ -256,6 +261,7 @@ Each guideline describes either a good or bad practice, and all have a consisten
 
 [laravel-passport-docs]: https://laravel.com/docs/10.x/passport
 [guzzlehttp-docs]: https://laravel.com/docs/10.x/http-client
+[spartie-docs]: https://spatie.be/docs/laravel-permission/v5/basic-usage/basic-usage
 [laravel-valet-docs]: https://laravel.com/docs/10.x/valet
 [linux-valet-docs]: https://valetlinux.plus/
 [laravel-redis-docs]: https://laravel.com/docs/10.x/redis
