@@ -201,11 +201,11 @@ class AuthController extends AbstractController  {
 
             $token = Auth::user()->token();
 
-            if (Carbon::parse($token->expires_at, 'UTC')->subSeconds(60)->timestamp < Carbon::now()->timestamp) {
+            if (Carbon::parse(Auth::user()->token()->expires_at, 'UTC')->subMinutes(5)->timestamp < Carbon::now()->timestamp) {
                 return self::refreshToken();
             }
 
-            return response()->json(["message" => "Token valido!"], 201);
+            return response()->json(["message" => "Token valido!", "access_token" => json_decode(CacheController::getCache("Bearer." . Auth::id()))->access_token], 201);
 
         } catch (\Exception $e) {
             return response()->json(["message" => "Recupero informazioni token fallito!", "error" => $e->getMessage()], 500);
