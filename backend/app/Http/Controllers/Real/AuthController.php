@@ -33,17 +33,6 @@ class AuthController extends AbstractApiController
         1 => 'https://backend-portfolio.test/'  //test
     ];
 
-    protected static $errors = [
-        'email.required' => 'Inserire l\'email',
-        'email.email' => 'Email errata',
-        'password.required' => 'Inserire la password',
-    ];
-
-    /**
-     * Custom __construct + parent
-     *
-     * @var Request $request
-     */
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -53,11 +42,6 @@ class AuthController extends AbstractApiController
         ->first();
     }
 
-    /**
-     * Get Controller $base_uri
-     *
-     * @return string
-     */
     protected function getBaseUri(): string
     {
         return self::$base_uri[ (int) $this->test_environment ];
@@ -78,7 +62,7 @@ class AuthController extends AbstractApiController
                     'email' => ['required', 'email'],
                     'password' => 'string|required',
                 ],
-                self::$errors,
+                $this::$errors,
             );
 
             if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
@@ -212,7 +196,7 @@ class AuthController extends AbstractApiController
     }
 
     /**
-     * Check it's Authed
+     * Check it's Authed OAuth2 -> oauth/token Passport
      *
      * @return JsonResponse|bool
      *

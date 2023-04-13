@@ -9,24 +9,20 @@ use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Routing\Controller as BaseController;
+use App\Http\Controllers\AbstractGenericController;
 
 /**
  * @author Matteo Perino
  */
-abstract class AbstractCrudController extends BaseController
+abstract class AbstractCrudController extends AbstractGenericController
 {
-    protected $test_environment = false;
-    protected ?Client $client = null;
     protected ?Request $request = null;
-    protected ?Logger $logger = null;
 
     public function __construct(Request $request)
     {
-        $this->test_environment = isset($request->header()["testing"][0]) ?? false;
-        $this->request = $request;
+        parent::__construct($request);
 
+        $this->request = $request;
         $this->logger = new Logger(
             env('APP_NAME') . '_internal', //filename
             'internal/' //subpath
@@ -74,6 +70,8 @@ abstract class AbstractCrudController extends BaseController
 
         if( !empty(json_decode($this->request->getContent(), true)) ){
             $entry_content = Utils::jsonEncode(json_decode($this->request->getContent(), true));
+        }else{
+            $entry_content = "{}";
         }
 
         if(!empty($this->request->header())) $entry_content .= "\nHeaders: " . json_encode($this->request->header());
@@ -83,24 +81,5 @@ abstract class AbstractCrudController extends BaseController
         $log_entry = $this->subText() . 'Request to ' . $endpoint . "\n" . $entry_content;
 
         return $log_entry;
-    }
-
-    /**
-     * Log action
-     *
-     * @param string $log_entry
-     * @param string $process_mark
-     * @param string $action
-     *
-     * @return void
-     */
-    private function log( string $log_entry, string $process_mark, string $action = 'request' )
-    {
-        $this->logger->info( $log_entry, [$process_mark] );
-    }
-
-    private function subText(): string
-    {
-        return ($this->test_environment ?'[TEST]':'') . ('[User:' . (Auth::id()??'Anon') . ']');
     }
 }

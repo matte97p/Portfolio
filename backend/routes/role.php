@@ -11,7 +11,7 @@ use App\Http\Controllers\Real\RoleController;
 
 Route::group(['prefix' => 'role'], function () {
     Route::post('/create', [RoleController::class, 'create']);
-    Route::post('/', [RoleController::class, 'index']);
+    Route::post('/', [RoleController::class, 'read']);
     Route::post('/update', [RoleController::class, 'update']);
     Route::post('/delete', [RoleController::class, 'delete']);
 

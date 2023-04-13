@@ -13,14 +13,6 @@ use Spatie\Permission\Models\Permission as PermissionSpatie;
 
 class RoleController extends AbstractCrudController
 {
-    protected static $errors = [
-        'id.required' => 'Inserire l\'id',
-        'id.integer' => 'Errore nella modifica',
-        'name.required' => 'Inserire il nome',
-        'name.max' => 'Nome troppo lungo',
-        'name.string' => 'Il nome deve essere un testo',
-    ];
-
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -34,14 +26,14 @@ class RoleController extends AbstractCrudController
                 [
                     'name' => ['required', 'string', 'max:50'],
                 ],
-                self::$errors,
+                $this::$errors,
             );
 
             if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
 
-            $role = RoleSpatie::findOrCreate($request->name);
+            $response = RoleSpatie::findOrCreate($request->name);
 
-            return response()->json(["message" => "Creazione riuscita!", "data" => $role], 200);
+            return response()->json(["message" => "Creazione riuscita!", "data" => $response], 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "Creazione fallita!", "error" => $e->getMessage()], 500);
         }
@@ -62,48 +54,47 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer'],
+                    'id' => ['required', 'integer', 'exists:roles,id'],
                     'name' => ['required', 'string', 'max:50'],
                 ],
-                self::$errors,
+                $this::$errors,
             );
 
             if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
 
-            $role = Role::findOrFail($request->id);
+            $response = Role::findOrFail($request->id);
 
-            $role->update(['name' => $request->name]);
+            $response->update(['name' => $request->name]);
 
-            return response()->json(["message" => "Aggiornamento riuscito!", "data" => $role], 200);
+            return response()->json(["message" => "Aggiornamento riuscito!", "data" => $response], 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "Aggiornamento fallito!", "error" => $e->getMessage()], 500);
         }
     }
 
-    /* @todo */
     public function delete(Request $request): JsonResponse
     {
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer'],
+                    'id' => ['required', 'int', 'exists:roles,id'],
                 ],
-                self::$errors,
+                $this::$errors,
             );
 
             if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
 
-            $role = Role::findOrFail($request->id)->softDeletes();
+            Role::withTrashed()->findOrFail($request->id)->delete();
 
-            return response()->json(["message" => "Aggiornamento riuscito!"], 204);
+            return response()->json(["message" => "Cancellazione riuscita!"], 204);
         } catch (\Exception $e) {
             return response()->json(["message" => "Cancellazione fallita!", "error" => $e->getMessage()], 500);
         }
     }
 
-    public function list()
+    public function list(): object
     {
-        return RoleSpatie::all()->pluck('name');
+        return Role::all()->pluck('name');
     }
 
     /* @todo */

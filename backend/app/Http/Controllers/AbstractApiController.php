@@ -7,28 +7,20 @@ use GuzzleHttp\Client;
 use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
 use GuzzleHttp\RequestOptions;
-use Illuminate\Support\Facades\Auth;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Http\Controllers\AbstractGenericController;
 
 /**
  * @author Matteo Perino
  */
-abstract class AbstractApiController extends BaseController
+abstract class AbstractApiController extends AbstractGenericController
 {
-    protected $test_environment = false;
-    protected ?Client $client = null;
-    protected ?Logger $logger = null;
-
     public function __construct(Request $request)
     {
-        $this->test_environment = isset($request->header()["testing"][0]) ?? false;
+        parent::__construct($request);
 
         $this->logger = new Logger(
             env('APP_NAME') . '_api', //filename
@@ -74,7 +66,9 @@ abstract class AbstractApiController extends BaseController
 
 
     /**
-     * @return string Returns the proper base uri
+     * Returns the proper base uri
+     *
+     * @return string
      */
     abstract protected function getBaseUri():string;
 
@@ -199,24 +193,5 @@ abstract class AbstractApiController extends BaseController
         $log_entry = $this->subText() . 'Response from ' . $this->getClient()->getConfig('base_uri'). $uri . "\n" . $body;
 
         return $log_entry;
-    }
-
-    /**
-     * Log action
-     *
-     * @param string $log_entry
-     * @param string $process_mark
-     * @param string $action
-     *
-     * @return void
-     */
-    private function log( string $log_entry, string $process_mark, string $action = 'request' )
-    {
-        $this->logger->info( $log_entry, [$process_mark] );
-    }
-
-    private function subText(): string
-    {
-        return ($this->test_environment ?'[TEST]':'') . ('[User:' . (Auth::id()??'Anon') . ']');
     }
 }

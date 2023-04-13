@@ -6,23 +6,11 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\AbstractCrudController;
 
 class UserController extends AbstractCrudController
 {
-    protected static $errors = [
-        'name.required' => 'Inserire il nome',
-        'name.string' => 'Il nome deve essere un testo',
-        'name.max' => 'Nome troppo lungo',
-        'email.required' => 'Inserire l\'email',
-        'email.email' => 'Email errata',
-        'email.unique' => 'Email già registrata',
-        'password.required' => 'Inserire la password',
-        'password.confirmed' => 'Password di conferma non corrisponde',
-    ];
-
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -38,7 +26,7 @@ class UserController extends AbstractCrudController
                     'email' => ['required', 'email', 'unique:users'],
                     'password' => ['required', 'confirmed'],
                 ],
-                self::$errors,
+                $this::$errors,
             );
 
             if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
@@ -68,17 +56,41 @@ class UserController extends AbstractCrudController
     public function update(Request $request): JsonResponse
     {
         try{
-            throw new Exception('Not implemented');
+            $validator = Validator::make($request->all(),
+                [
+                    'id' => ['required', 'integer', 'exists:users,id'],
+                    'name' => ['required', 'string', 'max:50'],
+                ],
+                $this::$errors,
+            );
+
+            if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
+
+            $response = User::findOrFail($request->id);
+
+            $response->update(['name' => $request->name]);
+
+            return response()->json(["message" => "Aggiornamento riuscito!", "data" => $response], 200);
         } catch (\Exception $e) {
             return response()->json(["message" => "Aggiornamento fallito!", "error" => $e->getMessage()], 500);
         }
     }
 
-    /* @todo */
     public function delete(Request $request): JsonResponse
     {
         try{
-            throw new Exception('Not implemented');
+            $validator = Validator::make($request->all(),
+                [
+                    'id' => ['required', 'int', 'exists:users,id'],
+                ],
+                $this::$errors,
+            );
+
+            if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
+
+            User::withTrashed()->findOrFail($request->id)->delete();
+
+            return response()->json(["message" => "Cancellazione riuscita!"], 204);
         } catch (\Exception $e) {
             return response()->json(["message" => "Cancellazione fallita!", "error" => $e->getMessage()], 500);
         }
