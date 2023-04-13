@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Real;
 
 use Exception;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 
 class CacheController extends Controller  {
 
@@ -17,7 +14,7 @@ class CacheController extends Controller  {
      *
      * @return void
      */
-    static function setCache($type, $value)
+    static function setCache($type, $value): void
     {
         Cache::put($type, $value, 600);
     }
@@ -27,7 +24,7 @@ class CacheController extends Controller  {
      *
      * @return mixed
      */
-    static function getCache($type)
+    static function getCache($type): mixed
     {
         return Cache::get($type);
     }
@@ -37,7 +34,7 @@ class CacheController extends Controller  {
      *
      * @return void
      */
-    static function delCache($type)
+    static function delCache($type): void
     {
         Cache::forget($type);
     }

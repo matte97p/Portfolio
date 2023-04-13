@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Auth;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
@@ -21,8 +22,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
  */
 abstract class AbstractApiController extends BaseController
 {
-    const UA = 'Portfolio';
-
     protected $test_environment = false;
     protected ?Client $client = null;
     protected ?Logger $logger = null;
@@ -32,8 +31,8 @@ abstract class AbstractApiController extends BaseController
         $this->test_environment = isset($request->header()["testing"][0]) ?? false;
 
         $this->logger = new Logger(
-            'PortfolioApi', //filename
-            '' //subpath
+            env('APP_NAME') . '_api', //filename
+            'api/' //subpath
         );
     }
 
@@ -56,7 +55,7 @@ abstract class AbstractApiController extends BaseController
                 RequestOptions::CONNECT_TIMEOUT => 10,
                 RequestOptions::VERIFY          => false, // NEVER DO THAT PLEASEEEEEEE -> set a certificate as docs [https://docs.guzzlephp.org/en/stable/request-options.html]
                 RequestOptions::HEADERS => [
-                    'User-Agent' => static::UA,
+                    'User-Agent' => env('APP_NAME'),
                     'Accept' => '*/*'
                 ],
             ]);
@@ -166,7 +165,7 @@ abstract class AbstractApiController extends BaseController
             $endpoint .= '?'.\http_build_query($options[RequestOptions::QUERY],null,'&');
         }
 
-        $log_entry = 'Request to ' . ($this->test_environment ?:'['.$this->test_environment.']') . $endpoint . "\n" . $entry_content;
+        $log_entry = $this->subText() . 'Request to ' . $endpoint . "\n" . $entry_content;
 
         return $log_entry;
     }
@@ -197,7 +196,7 @@ abstract class AbstractApiController extends BaseController
             throw new \Exception("Unexpected response type. Expected string or ResponseInterface, " . gettype($response) . " given");
         }
 
-        $log_entry = 'Response from ' . ($this->test_environment ?:'['.$this->test_environment.']') . $this->getClient()->getConfig('base_uri'). $uri . "\n" . $body;
+        $log_entry = $this->subText() . 'Response from ' . $this->getClient()->getConfig('base_uri'). $uri . "\n" . $body;
 
         return $log_entry;
     }
@@ -214,5 +213,10 @@ abstract class AbstractApiController extends BaseController
     private function log( string $log_entry, string $process_mark, string $action = 'request' )
     {
         $this->logger->info( $log_entry, [$process_mark] );
+    }
+
+    private function subText(): string
+    {
+        return ($this->test_environment ?'[TEST]':'') . ('[User:' . (Auth::id()??'Anon') . ']');
     }
 }

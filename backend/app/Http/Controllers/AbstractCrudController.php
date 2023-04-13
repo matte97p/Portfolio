@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use GuzzleHttp\Utils;
 use GuzzleHttp\Client;
 use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller as BaseController;
 
 /**
@@ -25,12 +27,9 @@ abstract class AbstractCrudController extends BaseController
         $this->test_environment = isset($request->header()["testing"][0]) ?? false;
         $this->request = $request;
 
-        $data = $this->request->json() ?? null;
-        $uri = $this->request->url() ?? null;
-
         $this->logger = new Logger(
-            env('APP_NAME'). 'Internal', //filename
-            '' //subpath
+            env('APP_NAME') . '_internal', //filename
+            'internal/' //subpath
         );
     }
 
@@ -39,10 +38,10 @@ abstract class AbstractCrudController extends BaseController
      * @return Response
      * @throws Exception
      */
-    abstract protected function create(Request $request):JsonResponse;  //C
-    abstract protected function index(Request $request):JsonResponse;   //R
-    abstract protected function update(Request $request):JsonResponse;  //U
-    abstract protected function delete(Request $request):JsonResponse;  //D
+    abstract protected function create(Request $request): JsonResponse; //C
+    abstract protected function read(Request $request): JsonResponse;   //R
+    abstract protected function update(Request $request): JsonResponse; //U
+    abstract protected function delete(Request $request): JsonResponse; //D
 
     /**
      * @todo
@@ -51,15 +50,12 @@ abstract class AbstractCrudController extends BaseController
      */
     protected function request()
     {
-        $data = $this->request->json() ?? [];
-        $uri = $this->request->url();
-
         $logger = $this->logger;
         $process_mark = $logger->getProcessMark();
 
         // log request
         $this->log(
-            $this->getRequestLogEntry( $data, $uri ),
+            $this->getRequestLogEntry(),
             $process_mark,
             $logger::ACTION_REQUEST
         );
@@ -68,37 +64,23 @@ abstract class AbstractCrudController extends BaseController
     /**
      * Log request object @todo
      *
-     * @param array $options
-     * @param string $uri
-     *
      * @return string
      *
      * @throws \Exception
      */
-    private function getRequestLogEntry( array $options, string $uri ): string
+    private function getRequestLogEntry(): string
     {
         $entry_content = '';
 
-        if( isset($options[RequestOptions::FORM_PARAMS]) ){
-            $entry_content = \http_build_query($options[RequestOptions::FORM_PARAMS], '', '&');
-        }
-        elseif ( isset($options[RequestOptions::JSON]) )
-        {
-            $entry_content = Utils::jsonEncode($options[RequestOptions::JSON]);
-        }
-        elseif( isset($options[RequestOptions::BODY]) ){
-            $entry_content = $options[RequestOptions::BODY];
+        if( !empty(json_decode($this->request->getContent(), true)) ){
+            $entry_content = Utils::jsonEncode(json_decode($this->request->getContent(), true));
         }
 
-        if(isset($options[ RequestOptions::HEADERS ])) $entry_content .= "\nHeaders: " . json_encode($options[ RequestOptions::HEADERS ]);
+        if(!empty($this->request->header())) $entry_content .= "\nHeaders: " . json_encode($this->request->header());
 
-        $endpoint = $this->getClient()->getConfig('base_uri').$uri;
+        $endpoint = $this->request->fullUrl();
 
-        if( isset($options[RequestOptions::QUERY]) ){
-            $endpoint .= '?'.\http_build_query($options[RequestOptions::QUERY],null,'&');
-        }
-
-        $log_entry = 'Request to ' . ($this->test_environment ?:'['.$this->test_environment.']') . $endpoint . "\n" . $entry_content;
+        $log_entry = $this->subText() . 'Request to ' . $endpoint . "\n" . $entry_content;
 
         return $log_entry;
     }
@@ -115,5 +97,10 @@ abstract class AbstractCrudController extends BaseController
     private function log( string $log_entry, string $process_mark, string $action = 'request' )
     {
         $this->logger->info( $log_entry, [$process_mark] );
+    }
+
+    private function subText(): string
+    {
+        return ($this->test_environment ?'[TEST]':'') . ('[User:' . (Auth::id()??'Anon') . ']');
     }
 }

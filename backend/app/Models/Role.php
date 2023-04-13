@@ -2,25 +2,21 @@
 
 namespace App\Models;
 
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Auth\MustVerifyEmail;
-use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 
-class User extends Authenticatable implements MustVerifyEmailContract
+class Role extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes, MustVerifyEmail;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'roles';
 
     /**
      * The primary key associated with the table.
@@ -36,8 +32,6 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     protected $fillable = [
         'name',
-        'email',
-        'password',
     ];
 
     /**
@@ -46,8 +40,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'guard_name',
         'deleted_at',
     ];
 
@@ -57,13 +50,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    public function findByEmail($email)
-    {
-        return $this->find(['email' => $email]);
-    }
 }

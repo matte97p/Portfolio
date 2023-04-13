@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Real\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,4 +14,6 @@ Route::group(['prefix' => 'role'], function () {
     Route::post('/', [RoleController::class, 'index']);
     Route::post('/update', [RoleController::class, 'update']);
     Route::post('/delete', [RoleController::class, 'delete']);
+
+    Route::post('/list', [RoleController::class, 'list']);
 });
