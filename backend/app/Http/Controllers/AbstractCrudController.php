@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use GuzzleHttp\Utils;
-use GuzzleHttp\Client;
 use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
 use GuzzleHttp\RequestOptions;

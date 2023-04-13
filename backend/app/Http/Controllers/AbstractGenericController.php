@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
