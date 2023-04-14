@@ -17,7 +17,7 @@ class Permission extends Model
      *
      * @var string
      */
-    protected $table = 'permissions';
+    protected $table = 'permissions_currents';
 
     /**
      * The primary key associated with the table.
@@ -33,6 +33,8 @@ class Permission extends Model
      */
     protected $fillable = [
         'name',
+        'guard_name',
+        'users_id',
     ];
 
     /**

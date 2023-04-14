@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'phone' => $faker->phoneNumber(),
                 'gender' => $faker->randomElement(['m', 'f']),
-                'birth_date' => $faker->date('Y_m_d'),
+                'birth_date' => $faker->unique()->dateTimeBetween('-70 years', '-19 years')->format('Y-m-d'),
                 'password' => bcrypt("$2y$10$"),
                 'remember_token' => Str::random(10),
             ]);

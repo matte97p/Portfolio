@@ -17,7 +17,7 @@ class Role extends Model
      *
      * @var string
      */
-    protected $table = 'roles';
+    protected $table = 'roles_currents';
 
     /**
      * The primary key associated with the table.
@@ -33,6 +33,8 @@ class Role extends Model
      */
     protected $fillable = [
         'name',
+        'guard_name',
+        'users_id',
     ];
 
     /**

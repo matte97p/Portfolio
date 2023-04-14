@@ -34,7 +34,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'phone' => fake()->phoneNumber(),
             'gender' => fake()->randomElement(['m', 'f']),
-            'birth_date' => fake()->date('Y_m_d'),
+            'birth_date' => fake()->unique()->dateTimeBetween('-70 years', '-19 years')->format('Y-m-d'),
             'password' => bcrypt("$2y$10$"),
             'remember_token' => Str::random(10),
         ];

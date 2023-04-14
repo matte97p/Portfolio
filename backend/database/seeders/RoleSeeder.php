@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 
@@ -63,6 +64,7 @@ class RoleSeeder extends Seeder
             Role::create([
                 'name' => $role["name"],
                 'guard_name' => 'api',
+                'users_id' => User::findByTaxId("PRNMTT97H28A479G")->id,
             ]);
         }
     }

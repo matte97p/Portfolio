@@ -21,7 +21,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'users_currents';
 
     /**
      * The primary key associated with the table.
@@ -38,9 +38,12 @@ class User extends Authenticatable implements MustVerifyEmailContract
     protected $fillable = [
         'name',
         'surname',
-        'email',
-        'password',
         'taxid',
+        'email',
+        'phone',
+        'gender',
+        'birth_date',
+        'password',
     ];
 
     /**
@@ -52,6 +55,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'password',
         'remember_token',
         'deleted_at',
+        'version',
     ];
 
     /**
@@ -63,10 +67,16 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'email_verified_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
-    public function findByEmail($email)
+    public static function findByEmail($email)
     {
-        return $this->find(['email' => $email]);
+        return self::where('email', $email)->first();
+    }
+
+    public static function findByTaxId($taxid)
+    {
+        return self::where('taxid', $taxid)->first();
     }
 }

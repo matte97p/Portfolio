@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Permission;
 use Illuminate\Database\Seeder;
 
@@ -39,6 +40,7 @@ class PermissionSeeder extends Seeder
             Permission::create([
                 'name' => $permission["name"],
                 'guard_name' => 'api',
+                'users_id' => User::findByTaxId("PRNMTT97H28A479G")->id,
             ]);
         }
     }
