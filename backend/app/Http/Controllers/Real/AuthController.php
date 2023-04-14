@@ -27,7 +27,7 @@ class AuthController extends AbstractApiController
 
     private static $oauth_client = [
         0 => 'ProdOauthClient', //prod
-        1 => 'LocalPswClient'   //test
+        1 => 'LocalClient'   //test
     ];
 
     protected static $base_uri = [

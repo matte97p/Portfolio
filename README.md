@@ -208,7 +208,7 @@
 
    ```
    php artisan passport:client --password
-   named LocalPswClient eg
+   named LocalClient eg
    ```
 
 6. Start the web server for http://localhost:8000/

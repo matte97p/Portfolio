@@ -3,8 +3,7 @@
 namespace App\Exceptions;
 
 use Throwable;
-use PDOException;
-use \Psr\Log\LogLevel;
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -19,6 +18,10 @@ class CustomHandler
 
         if ($e instanceof ModelNotFoundException) {
             return response()->json(["message" => $message, "error" => "Dato non trovato."], 404);
+        }
+
+        if ($e instanceof QueryException) {
+            return response()->json(["message" => $message, "error" => "Errore di dati."], 500);
         }
 
         if ($e instanceof ValidationException) {

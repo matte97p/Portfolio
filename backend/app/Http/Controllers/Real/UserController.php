@@ -25,7 +25,9 @@ class UserController extends AbstractCrudController
             $validator = Validator::make($request->all(),
                 [
                     'name' => ['required', 'string', 'max:255'],
+                    'surname' => ['required', 'string', 'max:255'],
                     'email' => ['required', 'email', 'unique:App\Models\User'],
+                    'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
                     'password' => ['required', 'confirmed'],
                 ],
                 $this::$errors,
@@ -54,14 +56,17 @@ class UserController extends AbstractCrudController
         }
     }
 
-    /* @todo */
+    /* @todo finire iniziato */
     public function update(Request $request): JsonResponse
     {
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\User,id'],
+                    'id' => ['required', 'integer', 'exists:App\Models\User'],
                     'name' => ['required', 'string', 'max:50'],
+                    'surname' => ['required', 'string', 'max:255'],
+                    'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
+                    'email' => ['required', 'string', 'unique:App\Models\User', 'max:50'],
                 ],
                 $this::$errors,
             );
@@ -83,7 +88,7 @@ class UserController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'int', 'exists:App\Models\User,id'],
+                    'id' => ['required', 'integer', 'exists:App\Models\User'],
                 ],
                 $this::$errors,
             );

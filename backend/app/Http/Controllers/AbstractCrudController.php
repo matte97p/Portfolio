@@ -57,7 +57,7 @@ abstract class AbstractCrudController extends AbstractGenericController
     }
 
     /**
-     * Log request object @todo
+     * Log request object
      *
      * @return string
      *

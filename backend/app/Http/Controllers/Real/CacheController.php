@@ -6,7 +6,8 @@ use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 
-class CacheController extends Controller  {
+class CacheController extends Controller
+{
 
     /**
      * @var mixed $type -> cache obj name

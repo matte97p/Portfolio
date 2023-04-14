@@ -165,6 +165,13 @@ return [
             'unique' => 'Il nome è già registrato.',
             'max' => 'Nome troppo lungo.',
         ],
+        'taxid' => [
+            'required' => 'Inserire il codice fiscale.',
+            'string' => 'Il codice fiscale non è valida.',
+            'unique' => 'Il codice fiscale è già registrato.',
+            'min' => 'Codice fiscale troppo corto.',
+            'max' => 'Codice fiscale troppo lungo.',
+        ],
         'email' => [
             'required' => 'Inserire l\'email.',
             'email' => 'L\'email non è valida.',

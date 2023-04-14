@@ -25,7 +25,7 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'name' => ['required', 'string', 'unique:App\Models\Role,name', 'max:50'],
+                    'name' => ['required', 'string', 'unique:App\Models\Role', 'max:50'],
                 ],
                 $this::$errors,
             );
@@ -55,8 +55,8 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\Role,id'],
-                    'name' => ['required', 'string', 'unique:App\Models\Role,name', 'max:50'],
+                    'id' => ['required', 'integer', 'exists:App\Models\Role'],
+                    'name' => ['required', 'string', 'unique:App\Models\Role', 'max:50'],
                 ],
                 $this::$errors,
             );
@@ -78,7 +78,7 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'int', 'exists:App\Models\Role,id'],
+                    'id' => ['required', 'integer', 'exists:App\Models\Role'],
                 ],
                 $this::$errors,
             );
