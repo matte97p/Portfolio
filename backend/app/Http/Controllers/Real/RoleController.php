@@ -6,10 +6,11 @@ use Exception;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Exceptions\CustomHandler;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractCrudController;
 use Spatie\Permission\Models\Role as RoleSpatie;
-use Spatie\Permission\Models\Permission as PermissionSpatie;
 
 class RoleController extends AbstractCrudController
 {
@@ -24,18 +25,18 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'name' => ['required', 'string', 'max:50'],
+                    'name' => ['required', 'string', 'unique:App\Models\Role,name', 'max:50'],
                 ],
                 $this::$errors,
             );
 
-            if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            $response = RoleSpatie::findOrCreate($request->name);
+            $response = RoleSpatie::updateOrCreate($request->all());
 
             return response()->json(["message" => "Creazione riuscita!", "data" => $response], 200);
         } catch (\Exception $e) {
-            return response()->json(["message" => "Creazione fallita!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Creazione fallita!");
         }
     }
 
@@ -45,7 +46,7 @@ class RoleController extends AbstractCrudController
         try{
             throw new Exception('Not implemented');
         } catch (\Exception $e) {
-            return response()->json(["message" => "Ricerca fallita!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Ricerca fallita!");
         }
     }
 
@@ -54,13 +55,13 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:roles,id'],
-                    'name' => ['required', 'string', 'max:50'],
+                    'id' => ['required', 'integer', 'exists:App\Models\Role,id'],
+                    'name' => ['required', 'string', 'unique:App\Models\Role,name', 'max:50'],
                 ],
                 $this::$errors,
             );
 
-            if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
             $response = Role::findOrFail($request->id);
 
@@ -68,7 +69,7 @@ class RoleController extends AbstractCrudController
 
             return response()->json(["message" => "Aggiornamento riuscito!", "data" => $response], 200);
         } catch (\Exception $e) {
-            return response()->json(["message" => "Aggiornamento fallito!", "error" => $e->getMessage()], 500);
+           return CustomHandler::renderCustom($e, "Aggiornamento fallito!");
         }
     }
 
@@ -77,18 +78,18 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'int', 'exists:roles,id'],
+                    'id' => ['required', 'int', 'exists:App\Models\Role,id'],
                 ],
                 $this::$errors,
             );
 
-            if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            Role::withTrashed()->findOrFail($request->id)->delete();
+            Role::findOrFail($request->id)->delete();
 
             return response()->json(["message" => "Cancellazione riuscita!"], 204);
         } catch (\Exception $e) {
-            return response()->json(["message" => "Cancellazione fallita!", "error" => $e->getMessage()], 500);
+           return CustomHandler::renderCustom($e, "Cancellazione fallita!");
         }
     }
 
@@ -111,7 +112,7 @@ class RoleController extends AbstractCrudController
 
             return response()->json(["message" => "Ruoli aggiornati con successo!"], 200);
         } catch (\Exception $e) {
-            return response()->json(["message" => "Aggiornamento ruoli fallito!"], 500);
+            return CustomHandler::renderCustom($e, "Aggiornamento ruoli fallito!");
         }
     }
 }

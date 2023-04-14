@@ -66,7 +66,7 @@ return [
     'image' => 'The :attribute must be an image.',
     'in' => ':attribute non valido/a.',
     'in_array' => 'The :attribute field does not exist in :other.',
-    'integer' => 'The :attribute must be an integer.',
+    'integer' => ':attribute deve essere un numero.',
     'ip' => 'The :attribute must be a valid IP address.',
     'ipv4' => 'The :attribute must be a valid IPv4 address.',
     'ipv6' => 'The :attribute must be a valid IPv6 address.',
@@ -137,7 +137,7 @@ return [
     'starts_with' => 'The :attribute must start with one of the following: :values.',
     'string' => 'The :attribute must be a string.',
     'timezone' => 'The :attribute must be a valid timezone.',
-    'unique' => 'The :attribute has already been taken.',
+    'unique' => ':attribute è già registrato/a.',
     'uploaded' => 'The :attribute failed to upload.',
     'uppercase' => 'The :attribute must be uppercase.',
     'url' => 'The :attribute must be a valid URL.',
@@ -157,20 +157,22 @@ return [
     'custom' => [
         'id' => [
             'required' => 'Inserire l\'id.',
-            'integer' => 'L\'id nome non è valido.',
+            'integer' => 'L\'id non è valido.',
         ],
         'name' => [
             'required' => 'Inserire il nome.',
             'string' => 'Il nome non è valido.',
+            'unique' => 'Il nome è già registrato.',
             'max' => 'Nome troppo lungo.',
         ],
         'email' => [
             'required' => 'Inserire l\'email.',
-            'email' => 'Email non è valida.',
-            'unique' => 'Email già registrata.',
+            'email' => 'L\'email non è valida.',
+            'unique' => 'L\'email è già registrata.',
         ],
         'password' => [
             'required' => 'Inserire la password.',
+            'string' => 'La password non è valida.',
             'confirmed' => 'Password di conferma non corrisponde.',
         ],
     ],

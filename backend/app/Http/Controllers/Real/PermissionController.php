@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Real;
 
 use Exception;
-use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomHandler;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractCrudController;
+use Spatie\Permission\Models\Permission as PermissionSpatie;
 
-class UserController extends AbstractCrudController
+class PermissionController extends AbstractCrudController
 {
     public function __construct(Request $request)
     {
@@ -24,21 +25,16 @@ class UserController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'name' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'email', 'unique:App\Models\User'],
-                    'password' => ['required', 'confirmed'],
+                    'name' => ['required', 'string', 'unique:App\Models\Permission,name', 'max:50'],
                 ],
                 $this::$errors,
             );
 
             if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            $data = $request->all();
-            $data["password"] = bcrypt($request->password);
+            $response = PermissionSpatie::updateOrCreate($request->all());
 
-            $user = User::create($data);
-
-            return response()->json(["message" => "Creazione riuscita!", "data" => $user], 200);
+            return response()->json(["message" => "Creazione riuscita!", "data" => $response], 200);
         } catch (\Exception $e) {
             return CustomHandler::renderCustom($e, "Creazione fallita!");
         }
@@ -54,27 +50,26 @@ class UserController extends AbstractCrudController
         }
     }
 
-    /* @todo */
     public function update(Request $request): JsonResponse
     {
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\User,id'],
-                    'name' => ['required', 'string', 'max:50'],
+                    'id' => ['required', 'integer', 'exists:App\Models\Permission,id'],
+                    'name' => ['required', 'string', 'unique:App\Models\Permission,name', 'max:50'],
                 ],
                 $this::$errors,
             );
 
             if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            $response = User::findOrFail($request->id);
+            $response = Permission::findOrFail($request->id);
 
-            // $response->update(['name' => $request->name]);
+            $response->update(['name' => $request->name]);
 
             return response()->json(["message" => "Aggiornamento riuscito!", "data" => $response], 200);
         } catch (\Exception $e) {
-            return CustomHandler::renderCustom($e, "Aggiornamento fallito!");
+           return CustomHandler::renderCustom($e, "Aggiornamento fallito!");
         }
     }
 
@@ -83,18 +78,23 @@ class UserController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'int', 'exists:App\Models\User,id'],
+                    'id' => ['required', 'integer', 'exists:App\Models\Permission,id'],
                 ],
                 $this::$errors,
             );
 
             if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            User::findOrFail($request->id)->delete();
+            Permission::findOrFail($request->id)->delete();
 
             return response()->json(["message" => "Cancellazione riuscita!"], 204);
         } catch (\Exception $e) {
            return CustomHandler::renderCustom($e, "Cancellazione fallita!");
         }
+    }
+
+    public function list(): object
+    {
+        return Permission::all()->pluck('name');
     }
 }

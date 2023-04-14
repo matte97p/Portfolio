@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
+use App\Exceptions\CustomHandler;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use App\Http\Controllers\Real\CacheController;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Real\CacheController;
+use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractApiController;
 
 class AuthController extends AbstractApiController
@@ -60,19 +62,19 @@ class AuthController extends AbstractApiController
             $validator = Validator::make($request->all(),
                 [
                     'email' => ['required', 'email'],
-                    'password' => 'string|required',
+                    'password' => ['required', 'string'],
                 ],
                 $this::$errors,
             );
 
-            if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
             if(!Auth::guard('web')->attempt($request->all())) return response()->json(["message" => "Credenziali errate!"], 403);
 
             return true;
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Login fallito!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Login fallito!");
         }
     }
 
@@ -115,7 +117,7 @@ class AuthController extends AbstractApiController
             return response()->json(["message" => "Token aggiornato con successo!", "access_token" => $response->access_token], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Recupero refresh token fallito!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Recupero refresh token fallito!");
         }
     }
 
@@ -155,7 +157,7 @@ class AuthController extends AbstractApiController
             return response()->json(["message" => "Login effettuato con successo!", "access_token" => $response->access_token], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Login fallito!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Login fallito!");
         }
     }
 
@@ -191,7 +193,7 @@ class AuthController extends AbstractApiController
             return response()->json(["message" => "Token valido!", "access_token" => $this->getToken()->refresh_token], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Recupero informazioni token fallito!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Recupero informazioni token fallito!");
         }
     }
 
