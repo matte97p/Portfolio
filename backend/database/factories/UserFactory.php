@@ -32,6 +32,9 @@ class UserFactory extends Factory
             'taxid' => Person::taxId(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'phone' => fake()->phoneNumber(),
+            'gender' => fake()->randomElement(['m', 'f']),
+            'birth_date' => fake()->date('Y_m_d'),
             'password' => bcrypt("$2y$10$"),
             'remember_token' => Str::random(10),
         ];

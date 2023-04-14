@@ -26,9 +26,25 @@ class UserSeeder extends Seeder
                 'taxid' => Person::taxId(),
                 'email' => $faker->unique()->safeEmail(),
                 'email_verified_at' => now(),
+                'phone' => $faker->phoneNumber(),
+                'gender' => $faker->randomElement(['m', 'f']),
+                'birth_date' => $faker->date('Y_m_d'),
                 'password' => bcrypt("$2y$10$"),
                 'remember_token' => Str::random(10),
             ]);
         }
+
+        User::create([
+            'name' => 'Matteo',
+            'surname' => 'Perino',
+            'taxid' => 'PRNMTT97H28A479G',
+            'email' => 'prova@example.net',
+            'email_verified_at' => now(),
+            'phone' => $faker->phoneNumber(),
+            'gender' => $faker->randomElement(['m', 'f']),
+            'birth_date' => $faker->date('Y_m_d'),
+            'password' => bcrypt("$2y$10$"),
+            'remember_token' => Str::random(10),
+        ]);
     }
 }

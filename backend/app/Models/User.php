@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Auth\MustVerifyEmail;
 use Spatie\Permission\Traits\HasRoles;
@@ -13,7 +14,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 
 class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes, MustVerifyEmail;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes, MustVerifyEmail, HasUuid;
 
     /**
      * The table associated with the model.
