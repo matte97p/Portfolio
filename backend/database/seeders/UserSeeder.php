@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
                 'phone' => $faker->phoneNumber(),
                 'gender' => $faker->randomElement(['m', 'f']),
                 'birth_date' => $faker->unique()->dateTimeBetween('-70 years', '-19 years')->format('Y-m-d'),
-                'password' => bcrypt("$2y$10$"),
+                'password' => bcrypt("$2y$10!aS"),
                 'remember_token' => Str::random(10),
             ]);
         }
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
             'phone' => $faker->phoneNumber(),
             'gender' => $faker->randomElement(['m', 'f']),
             'birth_date' => $faker->date('Y_m_d'),
-            'password' => bcrypt("$2y$10$"),
+            'password' => bcrypt("$2y$10!aS"),
             'remember_token' => Str::random(10),
         ]);
     }

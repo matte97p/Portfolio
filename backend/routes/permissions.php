@@ -16,4 +16,6 @@ Route::group(['prefix' => 'permission'], function () {
     Route::post('/delete', [PermissionController::class, 'delete']);
 
     Route::post('/list', [PermissionController::class, 'list']);
+    Route::post('/give', [PermissionController::class, 'give']);
+    Route::post('/revoke', [PermissionController::class, 'revoke']);
 });

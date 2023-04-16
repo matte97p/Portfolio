@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Throwable;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
+use \Spatie\Permission\Exceptions\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -26,6 +27,10 @@ class CustomHandler
 
         if ($e instanceof ValidationException) {
             return response()->json(["message" => $message, "error" => $e->errors()], $e->status);
+        }
+
+        if ($e instanceof UnauthorizedException) {
+            return response()->json(["message" => "Non hai i permessi.", "error" => $e], 403);
         }
 
         return response()->json(["message" => $message, "error" => $e->getMessage()], $e->status ?? 500);

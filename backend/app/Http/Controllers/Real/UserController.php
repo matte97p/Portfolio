@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomHandler;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractCrudController;
 
@@ -22,13 +23,17 @@ class UserController extends AbstractCrudController
     public function create(Request $request): JsonResponse
     {
         try{
+            $password_role = Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised();
             $validator = Validator::make($request->all(),
                 [
                     'name' => ['required', 'string', 'max:255'],
                     'surname' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'email', 'unique:App\Models\User'],
                     'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
-                    'password' => ['required', 'confirmed'],
+                    'email' => ['required', 'email', 'unique:App\Models\User', 'min:7'],
+                    'phone' => ['required', 'integer', 'unique:App\Models\User', 'digits_between:6,15'],
+                    'gender' => ['required', 'string', 'in:m,f'],
+                    'birth_date' => ['required', 'date', 'before:today', 'min:10', 'max:10'],
+                    'password' => ['required', 'confirmed', $password_role],
                 ],
                 $this::$errors,
             );
@@ -66,7 +71,10 @@ class UserController extends AbstractCrudController
                     'name' => ['required', 'string', 'max:50'],
                     'surname' => ['required', 'string', 'max:255'],
                     'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
-                    'email' => ['required', 'string', 'unique:App\Models\User', 'max:50'],
+                    'email' => ['required', 'email', 'unique:App\Models\User', 'min:7'],
+                    'phone' => ['required', 'integer', 'unique:App\Models\User', 'digits_between:6,15'],
+                    'gender' => ['required', 'string', 'in:m,f'],
+                    'birth_date' => ['required', 'date', 'before:today', 'min:10', 'max:10'],
                 ],
                 $this::$errors,
             );
@@ -75,7 +83,15 @@ class UserController extends AbstractCrudController
 
             $response = User::findOrFail($request->id);
 
-            // $response->update(['name' => $request->name]);
+            $response->update([
+                'name' => $request->name,
+                'surname' => $request->surname,
+                'taxid' => $request->taxid,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'gender' => $request->gender,
+                'birth_date' => $request->birth_date,
+            ]);
 
             return response()->json(["message" => "Aggiornamento riuscito!", "data" => $response], 200);
         } catch (\Exception $e) {

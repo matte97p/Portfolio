@@ -182,6 +182,16 @@ return [
             'string' => 'La password non è valida.',
             'confirmed' => 'Password di conferma non corrisponde.',
         ],
+        'users' => [
+            'required' => 'Scegli un utente.',
+            'array' => 'Scegli almeno un utente.',
+            'confirmed' => 'Password di conferma non corrisponde.',
+        ],
+        'users.id' => [
+            'required' => 'Scegli almeno un utente.',
+            'id' => 'Scegli almeno un utente.',
+            'confirmed' => 'Password di conferma non corrisponde.',
+        ],
     ],
 
     /*

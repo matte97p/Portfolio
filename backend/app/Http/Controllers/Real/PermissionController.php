@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Real;
 
 use Exception;
+use App\Models\User;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -10,7 +11,6 @@ use App\Exceptions\CustomHandler;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractCrudController;
-use Spatie\Permission\Models\Permission as PermissionSpatie;
 
 class PermissionController extends AbstractCrudController
 {
@@ -32,7 +32,7 @@ class PermissionController extends AbstractCrudController
 
             if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            $response = PermissionSpatie::updateOrCreate($request->all());
+            $response = Permission::create($request->all());
 
             return response()->json(["message" => "Creazione riuscita!", "data" => $response], 200);
         } catch (\Exception $e) {
@@ -95,6 +95,60 @@ class PermissionController extends AbstractCrudController
 
     public function list(): object
     {
-        return Permission::all()->pluck('name');
+        return Permission::all()->pluck('name', 'id');
+    }
+
+    public function give(Request $request): JsonResponse
+    {
+        try{
+            $validator = Validator::make($request->all(),
+                [
+                    'users' => ['required', 'array', 'min:1'],
+                    'users.*.*' => ['uuid', 'exists:App\Models\User,id'],
+                    'permissions' => ['required', 'array', 'min:1'],
+                    'permissions.*' => ['string', 'exists:App\Models\Permission,name'], // @todo name or uuid ??
+                ],
+                $this::$errors,
+            );
+
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
+
+            foreach($request->users as $row)
+            {
+                $user = User::findByPrimary($row);
+                $user->givePermissionTo($request->permissions);
+            }
+
+            return response()->json(["message" => "Aggiornamento permessi riuscito!"], 201);
+        } catch (\Exception $e) {
+            return CustomHandler::renderCustom($e, "Aggiornamento permessi fallito!");
+        }
+    }
+
+    public function revoke(Request $request): JsonResponse
+    {
+        try{
+            $validator = Validator::make($request->all(),
+                [
+                    'user' => ['required', 'uuid', 'exists:App\Models\User,id'],
+                    'permissions' => ['required', 'array', 'min:1'],
+                    'permissions.*' => ['string', 'exists:App\Models\Permission,name'], // @todo name or uuid ??
+                ],
+                $this::$errors,
+            );
+
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
+
+            $user = User::findByPrimary($request->user);
+
+            foreach($request->permissions as $permission)
+            {
+                $user->revokePermissionTo($permission);
+            }
+
+            return response()->json(["message" => "Aggiornamento permessi riuscito!"], 201);
+        } catch (\Exception $e) {
+            return CustomHandler::renderCustom($e, "Aggiornamento permessi fallito!");
+        }
     }
 }

@@ -14,7 +14,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 
 class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes, MustVerifyEmail, HasUuid;
+    use HasUuid, HasApiTokens, MustVerifyEmail, HasRoles, Notifiable, SoftDeletes, HasFactory;
 
     /**
      * The table associated with the model.
@@ -69,6 +69,11 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    public static function findByPrimary($id)
+    {
+        return self::where('id', $id)->first();
+    }
 
     public static function findByEmail($email)
     {

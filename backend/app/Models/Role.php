@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Spatie\Permission\Guard;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Permission\Models\Role as RoleSpatie;
 
-class Role extends Model
+class Role extends RoleSpatie
 {
     use HasFactory, Notifiable, SoftDeletes, HasUuid;
 
@@ -56,4 +59,19 @@ class Role extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public static function findByPrimary($id)
+    {
+        return self::where('id', $id)->first();
+    }
+
+    /**
+     * RoleController create append guard_name and users_id
+     */
+    public static function create(array $attributes = [])
+    {
+        $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
+        if(Auth::check()) $attributes['users_id'] = Auth::id();
+        return static::query()->create($attributes);
+    }
 }

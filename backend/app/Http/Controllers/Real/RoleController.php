@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Real;
 
 use Exception;
 use App\Models\Role;
+use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomHandler;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractCrudController;
-use Spatie\Permission\Models\Role as RoleSpatie;
 
 class RoleController extends AbstractCrudController
 {
@@ -32,7 +33,7 @@ class RoleController extends AbstractCrudController
 
             if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            $response = RoleSpatie::updateOrCreate($request->all());
+            $response = Role::create($request->all());
 
             return response()->json(["message" => "Creazione riuscita!", "data" => $response], 200);
         } catch (\Exception $e) {
@@ -95,24 +96,106 @@ class RoleController extends AbstractCrudController
 
     public function list(): object
     {
-        return Role::all()->pluck('name');
+        return Role::all()->pluck('name', 'id');
     }
 
-    /* @todo */
-    public function setRole(Request $request): JsonResponse
+    public function give(Request $request): JsonResponse
     {
         try{
-            $idUtente = $req->input('idutente');
-            $ruolo = $req->input('ruolo');
+            $validator = Validator::make($request->all(),
+                [
+                    'users' => ['required', 'array', 'min:1'],
+                    'users.*' => ['uuid', 'exists:App\Models\User,id'],
+                    'roles' => ['required', 'array', 'min:1'],
+                    'roles.*' => ['string', 'exists:App\Models\Role,name'], // @todo name or uuid ??
+                ],
+                $this::$errors,
+            );
 
-            $ruoloList = new utenti_ruoli_lista;
-            $ruoloList->idutente = $idUtente;
-            $ruoloList->idruolo = $ruolo;
-            $ruoloList->save();
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            return response()->json(["message" => "Ruoli aggiornati con successo!"], 200);
+            foreach($request->users as $row)
+            {
+                $user = User::findByPrimary($row);
+                $user->assignRole($request->roles);
+            }
+
+            return response()->json(["message" => "Aggiornamento ruoli riuscito!"], 201);
         } catch (\Exception $e) {
             return CustomHandler::renderCustom($e, "Aggiornamento ruoli fallito!");
+        }
+    }
+
+    public function revoke(Request $request): JsonResponse
+    {
+        try{
+            $validator = Validator::make($request->all(),
+                [
+                    'user' => ['required', 'uuid', 'exists:App\Models\User,id'],
+                    'roles' => ['required', 'array', 'min:1'],
+                    'roles.*' => ['string', 'exists:App\Models\Role,name'], // @todo name or uuid ??
+                ],
+                $this::$errors,
+            );
+
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
+
+            $user = User::findByPrimary($request->user);
+
+            foreach($request->roles as $role)
+            {
+                $user->removeRole($role);
+            }
+
+            return response()->json(["message" => "Aggiornamento ruoli riuscito!"], 201);
+        } catch (\Exception $e) {
+            return CustomHandler::renderCustom($e, "Aggiornamento ruoli fallito!");
+        }
+    }
+
+    public function givePermission(Request $request): JsonResponse
+    {
+        try{
+            $validator = Validator::make($request->all(),
+                [
+                    'role' => ['required', 'string', 'min:1'],
+                    'permissions' => ['array', 'min:1'],
+                    'permissions.*' => ['string', 'exists:App\Models\Permission,name'], // @todo name or uuid ??
+                ],
+                $this::$errors,
+            );
+
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
+
+            $role = Role::findByName($request->role);
+            $role->givePermissionTo($request->permissions);
+
+            return response()->json(["message" => "Aggiornamento permessi dei ruoli riuscito!"], 201);
+        } catch (\Exception $e) {
+            return CustomHandler::renderCustom($e, "Aggiornamento permessi dei ruoli fallito!");
+        }
+    }
+
+    public function revokePermission(Request $request): JsonResponse
+    {
+        try{
+            $validator = Validator::make($request->all(),
+                [
+                    'role' => ['required', 'string', 'min:1'],
+                    'permissions' => ['array', 'min:1'],
+                    'permissions.*' => ['string', 'exists:App\Models\Permission,name'], // @todo name or uuid ??
+                ],
+                $this::$errors,
+            );
+
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
+
+            $role = Role::findByName($request->role);
+            $role->revokePermissionTo($request->permissions);
+
+            return response()->json(["message" => "Aggiornamento permessi dei ruoli riuscito!"], 201);
+        } catch (\Exception $e) {
+            return CustomHandler::renderCustom($e, "Aggiornamento permessi dei ruoli fallito!");
         }
     }
 }
