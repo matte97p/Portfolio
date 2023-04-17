@@ -183,14 +183,43 @@ return [
             'confirmed' => 'Password di conferma non corrisponde.',
         ],
         'users' => [
-            'required' => 'Scegli un utente.',
-            'array' => 'Scegli almeno un utente.',
-            'confirmed' => 'Password di conferma non corrisponde.',
-        ],
-        'users.id' => [
             'required' => 'Scegli almeno un utente.',
-            'id' => 'Scegli almeno un utente.',
-            'confirmed' => 'Password di conferma non corrisponde.',
+            'array' => 'Scegli almeno un utente.',
+            'min' => 'Scegli almeno un utente.',
+        ],
+        'users.*' => [
+            'string' => 'Errore nella scelta dell\'utente.',
+            'exists' => 'Utente inesistente.'
+        ],
+        'user' => [
+            'required' => 'Scegli un utente.',
+            'string' => 'Errore nella scelta dell\'utente.',
+        ],
+        'roles' => [
+            'required' => 'Scegli almeno un ruolo.',
+            'array' => 'Errore nella scelta dei ruoli.',
+            'min' => 'Scegli almeno un ruolo.',
+        ],
+        'roles.*' => [
+            'string' => 'Errore nella scelta del ruolo.',
+            'exists' => 'Ruolo inesistente.'
+        ],
+        'role' => [
+            'required' => 'Scegli un ruolo.',
+            'string' => 'Errore nella scelta del ruolo.',
+        ],
+        'permissions' => [
+            'required' => 'Scegli almeno un permesso.',
+            'array' => 'Errore nella scelta dei permessi.',
+            'min' => 'Scegli almeno un permesso.',
+        ],
+        'permissions.*' => [
+            'string' => 'Errore nella scelta del permesso.',
+            'exists' => 'Permesso inesistente.'
+        ],
+        'permission' => [
+            'required' => 'Scegli un permesso.',
+            'string' => 'Errore nella scelta del permesso.',
         ],
     ],
 

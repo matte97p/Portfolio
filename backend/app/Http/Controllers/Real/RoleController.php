@@ -158,8 +158,8 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'role' => ['required', 'string', 'min:1'],
-                    'permissions' => ['array', 'min:1'],
+                    'role' => ['required', 'string'],
+                    'permissions' => ['required', 'array', 'min:1'],
                     'permissions.*' => ['string', 'exists:App\Models\Permission,name'], // @todo name or uuid ??
                 ],
                 $this::$errors,
@@ -181,8 +181,8 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'role' => ['required', 'string', 'min:1'],
-                    'permissions' => ['array', 'min:1'],
+                    'role' => ['required', 'string'],
+                    'permissions' => ['required', 'array', 'min:1'],
                     'permissions.*' => ['string', 'exists:App\Models\Permission,name'], // @todo name or uuid ??
                 ],
                 $this::$errors,
