@@ -144,6 +144,11 @@
   composer require laravel/horizon
   php
   ```
+- [Reliese Laravel][reliese-laravel-docs] -> model generator from db
+  ```sh
+  composer require reliese/laravel
+  php artisan vendor:publish --tag=reliese-models
+  ```
 - [Angular][angular-download]
 
   ```sh
@@ -272,5 +277,6 @@ Each guideline describes either a good or bad practice, and all have a consisten
 [laravel-redis-docs]: https://laravel.com/docs/10.x/redis
 [laravel-telescope-docs]: https://laravel.com/docs/10.x/telescope
 [laravel-horizon-docs]: https://laravel.com/docs/10.x/horizon
+[reliese-laravel-docs]: https://github.com/reliese/laravel
 
 <!-- UTILITIES -->

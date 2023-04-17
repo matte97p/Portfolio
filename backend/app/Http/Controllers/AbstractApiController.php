@@ -33,7 +33,7 @@ abstract class AbstractApiController extends AbstractGenericController
      *
      * @throws \Exception
      */
-    public function getClient(): Client
+    private function getClient(): Client
     {
         if( is_null($this->client) ){
             if( empty($this->getBaseUri()) )
@@ -59,7 +59,7 @@ abstract class AbstractApiController extends AbstractGenericController
     /**
      * @param Client $client
      */
-    public function setClient(Client $client): void
+    private function setClient(Client $client): void
     {
         $this->client = $client;
     }
