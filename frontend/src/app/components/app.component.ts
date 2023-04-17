@@ -22,10 +22,9 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    /* @todo set timed option to 30s?? */
-     this.timerSubscription = timer(0, 10000).pipe(
+     this.timerSubscription = timer(0, 30000).pipe(
       map(() => {
-        if(this.router.url == '/auth/login') return;
+        if(this.router.url == '/login') return;
         this.authService.checkToken().subscribe(
           (res: any) => {},
           (err: any) => {}

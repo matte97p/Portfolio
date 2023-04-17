@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Concrete;
 
 use Exception;
-use Illuminate\Support\Carbon;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Carbon;
+use Illuminate\Http\JsonResponse;
+use App\Exceptions\CustomHandler;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\App;
-use App\Http\Controllers\AbstractController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CacheController;
 use Illuminate\Support\Facades\Validator;
-use GuzzleHttp\RequestOptions;
+use App\Http\Controllers\Concrete\CacheController;
+use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\AbstractApiController;
 
-class AuthController extends AbstractController  {
-
+class AuthController extends AbstractApiController
+{
     /**
      * @var OauthClient
      */
@@ -26,7 +27,7 @@ class AuthController extends AbstractController  {
 
     private static $oauth_client = [
         0 => 'ProdOauthClient', //prod
-        1 => 'LocalPswClient'   //test
+        1 => 'LocalClient'   //test
     ];
 
     protected static $base_uri = [
@@ -34,11 +35,6 @@ class AuthController extends AbstractController  {
         1 => 'https://backend-portfolio.test/'  //test
     ];
 
-    /**
-     * Custom __construct + parent
-     *
-     * @var Request $request
-     */
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -48,67 +44,64 @@ class AuthController extends AbstractController  {
         ->first();
     }
 
-    /**
-     * Get Controller $base_uri
-     *
-     * @return string
-     */
     protected function getBaseUri(): string
     {
         return self::$base_uri[ (int) $this->test_environment ];
     }
 
     /**
-     * Login password
-     *
      * @var Request $request
      *
-     * @return Response|bool
+     * @return JsonResponse|bool
      *
      * @throws Exception
      */
-    private function basicAuth(Request $request){
+    private function basicAuth(Request $request): JsonResponse|bool
+    {
         try{
-            $params = $request->all();
-
-            $validator = Validator::make($params,
+            $validator = Validator::make($request->all(),
                 [
                     'email' => ['required', 'email'],
-                    'password' => 'string|required',
+                    'password' => ['required', 'string'],
                 ],
-                [
-                    'email.required' => 'Inserire l\'email',
-                    'email.email' => 'Email non corretta',
-                    'password.required' => 'Inserire la password',
-                ]
+                $this::$errors,
             );
 
-            if ($validator->fails()) return response()->json(["message" => $validator->errors()->all()], 406);
+            if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
-            if(!Auth::guard('web')->attempt($params)) return response()->json(["message" => "Credenziali errate!"], 403);
+            if(!Auth::guard('web')->attempt($request->all())) return response()->json(["message" => "Credenziali errate!"], 403);
 
             return true;
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Login fallito!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Login fallito!");
         }
     }
 
     /**
-     * Refresh Token
-     *
-     * @return Response
+     * @return object
      *
      * @throws Exception
      */
-    private function refreshToken(){
+    private function getToken(): object
+    {
+        return json_decode(CacheController::getCache("Bearer." . Auth::id()));
+    }
+
+    /**
+     * @return JsonResponse
+     *
+     * @throws Exception
+     */
+    private function refreshToken(): JsonResponse
+    {
         try {
             $parameters =
             [
                 RequestOptions::JSON =>
                 [
                     'grant_type' => 'refresh_token',
-                    'refresh_token' => json_decode(CacheController::getCache("Bearer." . Auth::id()))->refresh_token,
+                    'refresh_token' => $this->getToken()->refresh_token,
                     'client_id' => $this->oauth_clients->id,
                     'client_secret' => $this->oauth_clients->secret,
                     'scope' => '*',
@@ -118,30 +111,28 @@ class AuthController extends AbstractController  {
             $response = $this->request('post', 'oauth/token', $parameters);
 
             $response = json_decode((string) $response->getBody());
+
             CacheController::setCache("Bearer." . Auth::id(), json_encode($response));
 
             return response()->json(["message" => "Token aggiornato con successo!", "access_token" => $response->access_token], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Recupero refresh token fallito!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Recupero refresh token fallito!");
         }
     }
 
     /**
-     * Login OAuth2
-     *
-     * oauth/token Passport
+     * Login OAuth2 -> oauth/token Passport
      *
      * @var Request $request
      *
-     * @return Response
+     * @return JsonResponse
      *
      * @throws Exception
      */
-    public function oauth2(Request $request){
+    public function oauth2(Request $request): JsonResponse
+    {
         try{
-            $params = $request->all();
-
             if ( ($check = self::basicAuth($request) ) !== true) { return $check; }
 
             $parameters =
@@ -151,8 +142,8 @@ class AuthController extends AbstractController  {
                     'grant_type' => 'password',
                     'client_id' => $this->oauth_clients->id,
                     'client_secret' => $this->oauth_clients->secret,
-                    'username' => $params["email"],
-                    'password' => $params["password"],
+                    'username' => $request->email,
+                    'password' => $request->password,
                     'scope' => '*',
                 ]
             ];
@@ -166,49 +157,59 @@ class AuthController extends AbstractController  {
             return response()->json(["message" => "Login effettuato con successo!", "access_token" => $response->access_token], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Login fallito!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Login fallito!");
         }
     }
 
     /**
-     * Logout
-     *
-     * @return Response
+     * @return JsonResponse
      *
      * @throws Exception
      */
-    public function logout(){
-        if ( ($check = UserController::checkLogged() ) !== true) { return $check; }
+    public function logout(): JsonResponse
+    {
+        if ( ($check = self::checkLogged() ) !== true) { return $check; }
 
         Auth::user()->token()->revoke();
         CacheController::delCache("Bearer." . Auth::id());
 
-        return response()->json(["message" => "Logout effettuato con successo!"], 200);
+        return response()->json(["message" => "Logout effettuato con successo!"], 201);
     }
 
     /**
-     * Check Token
-     *
-     * @var Request $request
-     *
-     * @return Response
+     * @return JsonResponse
      *
      * @throws Exception
      */
-    public function checkToken(Request $request){
+    public function checkToken(): JsonResponse
+    {
         try{
-            if ( ($check = UserController::checkLogged() ) !== true) { return $check; }
+            if ( ($check = self::checkLogged() ) !== true) { return $check; }
 
-            $token = Auth::user()->token();
-
-            if (Carbon::parse($token->expires_at, 'UTC')->subSeconds(60)->timestamp < Carbon::now()->timestamp) {
+            if (Carbon::parse(Auth::user()->token()->expires_at, 'UTC')->subMinutes(5)->timestamp < Carbon::now()->timestamp) {
                 return self::refreshToken();
             }
 
-            return response()->json(["message" => "Token valido!"], 201);
+            return response()->json(["message" => "Token valido!", "access_token" => $this->getToken()->refresh_token], 201);
 
         } catch (\Exception $e) {
-            return response()->json(["message" => "Recupero informazioni token fallito!", "error" => $e->getMessage()], 500);
+            return CustomHandler::renderCustom($e, "Recupero informazioni token fallito!");
         }
+    }
+
+    /**
+     * Check it's Authed OAuth2 -> oauth/token Passport
+     *
+     * @return JsonResponse|bool
+     *
+     * @throws Exception
+     */
+    public static function checkLogged(): JsonResponse|bool
+    {
+        if (!Auth::check()) {
+            return response()->json(["message" => "Utente non loggato!"], 401);
+        }
+
+        return true;
     }
 }

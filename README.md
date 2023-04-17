@@ -74,7 +74,12 @@
   ```sh
   composer require guzzlehttp/guzzle
   ```
-  composer require guzzlehttp/guzzle
+- [Spatie][spatie-docs] -> allows you to manage user permissions and roles in a database
+  ```sh
+  composer require spatie/laravel-permission
+  php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+  php artisan migrate
+  ```
 - optional MAC [Mac Valet][laravel-valet-docs] -> blazing fast Laravel development environment that uses roughly 7 MB of RAM
   ```sh
   composer global require laravel/valet
@@ -203,7 +208,7 @@
 
    ```
    php artisan passport:client --password
-   named LocalPswClient eg
+   named LocalClient eg
    ```
 
 6. Start the web server for http://localhost:8000/
@@ -216,6 +221,11 @@
 
    ```
    ng serve
+   ```
+
+8. Take a minute, go on your backend dir and do that before start programming
+   ```
+   php artisan inspire
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -256,6 +266,7 @@ Each guideline describes either a good or bad practice, and all have a consisten
 
 [laravel-passport-docs]: https://laravel.com/docs/10.x/passport
 [guzzlehttp-docs]: https://laravel.com/docs/10.x/http-client
+[spatie-docs]: https://spatie.be/docs/laravel-permission/v5/basic-usage/basic-usage
 [laravel-valet-docs]: https://laravel.com/docs/10.x/valet
 [linux-valet-docs]: https://valetlinux.plus/
 [laravel-redis-docs]: https://laravel.com/docs/10.x/redis

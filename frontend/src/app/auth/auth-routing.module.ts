@@ -5,10 +5,6 @@ import { LoginComponent } from './components/login/login.component';
 const authRoutes: Routes = [
   {
     path: '', component: LoginComponent,
-    children: [
-      { path: 'login', component: LoginComponent, },
-      { path: 'logout', redirectTo: '/auth/login' }, /* @todo cancellare valori di sessione */
-    ]
   }
 ];
 

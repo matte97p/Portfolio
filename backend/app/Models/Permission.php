@@ -3,25 +3,24 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Auth\MustVerifyEmail;
-use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Guard;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Spatie\Permission\Models\Permission as PermissionSpatie;
 
-class User extends Authenticatable implements MustVerifyEmailContract
+class Permission extends PermissionSpatie
 {
-    use HasUuid, HasApiTokens, MustVerifyEmail, HasRoles, Notifiable, SoftDeletes, HasFactory;
+    use HasFactory, Notifiable, SoftDeletes, HasUuid;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'users_currents';
+    protected $table = 'permissions_currents';
 
     /**
      * The primary key associated with the table.
@@ -37,13 +36,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     protected $fillable = [
         'name',
-        'surname',
-        'taxid',
-        'email',
-        'phone',
-        'gender',
-        'birth_date',
-        'password',
+        'guard_name',
+        'users_id',
     ];
 
     /**
@@ -52,10 +46,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'guard_name',
         'deleted_at',
-        'version',
     ];
 
     /**
@@ -64,10 +56,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
     public static function findByPrimary($id)
@@ -75,13 +65,13 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return self::where('id', $id)->first();
     }
 
-    public static function findByEmail($email)
+    /**
+     * PermissionController create append guard_name and users_id
+     */
+    public static function create(array $attributes = [])
     {
-        return self::where('email', $email)->first();
-    }
-
-    public static function findByTaxId($taxid)
-    {
-        return self::where('taxid', $taxid)->first();
+        $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
+        if(Auth::check()) $attributes['users_id'] = Auth::id();
+        return static::query()->create($attributes);
     }
 }

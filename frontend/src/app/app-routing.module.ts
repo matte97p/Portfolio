@@ -6,7 +6,7 @@ import { AuthGuardService } from './shared/services/auth-guard.service';
 
 const appRoutes: Routes = [
   {
-    path: 'auth',
+    path: 'login',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
     data: { animation: 'Login' }
   },
@@ -28,7 +28,8 @@ const appRoutes: Routes = [
   //   canActivate: [AuthGuardService],
   //   data: { animation: 'Admin' }
   // },
-  { path: '',   redirectTo: '/auth/login', pathMatch: 'full' },
+  { path: 'logout', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent, data: { animation: '404' } }
 ];
 

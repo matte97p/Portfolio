@@ -1,15 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CacheController;
+use App\Http\Controllers\Concrete\AuthController;
+use App\Http\Controllers\Concrete\UserController;
 
 Route::group(['prefix' => 'auth'], function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    // Route::post('/basicAuth', [AuthController::class, 'basicAuth']);
     Route::post('/oauth2', [AuthController::class, 'oauth2'])->name('login');
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('/checkToken', [AuthController::class, 'checkToken']);
-
-    Route::get('/redis_test', [CacheController::class, 'redis_test']);
 });
+
+Route::post('user/create', [UserController::class, 'create']); /* @todo usare quello in users.php ora serve per annulare e rifare migration */

@@ -2,8 +2,8 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -23,6 +23,8 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         \League\OAuth2\Server\Exception\OAuthServerException::class,
+        \Illuminate\Validation\ValidationException::class,
+        \Illuminate\Database\Eloquent\ModelNotFoundException::class,
     ];
 
     /**
@@ -48,7 +50,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
-                    'message' => 'Record not found.'
+                    'message' => 'Pagina non trovata.'
                 ], 404);
             }
         });
