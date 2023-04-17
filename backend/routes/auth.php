@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Real\AuthController;
-use App\Http\Controllers\Real\UserController;
+use App\Http\Controllers\Concrete\AuthController;
+use App\Http\Controllers\Concrete\UserController;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/oauth2', [AuthController::class, 'oauth2'])->name('login');

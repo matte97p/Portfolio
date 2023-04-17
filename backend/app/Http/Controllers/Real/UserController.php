@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Real;
+namespace App\Http\Controllers\Concrete;
 
 use Exception;
 use App\Models\User;
@@ -18,6 +18,8 @@ class UserController extends AbstractCrudController
     {
         parent::__construct($request);
         $this->request();
+        /* EXAMPLE */
+        // $this->middleware(['role_or_permission:Docente|Scrivere Ruoli'];
     }
 
     public function create(Request $request): JsonResponse

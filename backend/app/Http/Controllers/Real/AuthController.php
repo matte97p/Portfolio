@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Real;
+namespace App\Http\Controllers\Concrete;
 
 use Exception;
 use App\Models\User;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Real\CacheController;
+use App\Http\Controllers\Concrete\CacheController;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractApiController;
 

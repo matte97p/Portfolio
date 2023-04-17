@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Real\PermissionController;
+use App\Http\Controllers\Concrete\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
