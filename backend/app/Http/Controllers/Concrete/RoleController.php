@@ -94,9 +94,9 @@ class RoleController extends AbstractCrudController
         }
     }
 
-    public function list(): object
+    public static function list(): array
     {
-        return Role::all()->pluck('name', 'id');
+        return Role::all()->pluck('name', 'id')->toArray();
     }
 
     public function give(Request $request): JsonResponse

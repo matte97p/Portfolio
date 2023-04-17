@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         /* CURRENTS */
-        DB::unprepared(DB::raw("CREATE TABLE IF NOT EXISTS permissions_currents () INHERITS (permissions);"));
+        DB::unprepared("CREATE TABLE IF NOT EXISTS permissions_currents () INHERITS (permissions);");
         Schema::table('permissions_currents', function (Blueprint $table) {
             $table->primary('id');
             $table->foreign('users_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade')->default(null);
@@ -26,7 +26,7 @@ return new class extends Migration
         });
 
         /* HISTORY */
-        DB::unprepared(DB::raw("CREATE TABLE IF NOT EXISTS permissions_history () INHERITS (permissions);"));
+        DB::unprepared("CREATE TABLE IF NOT EXISTS permissions_history () INHERITS (permissions);");
         Schema::table('permissions_history', function (Blueprint $table) {
             $table->primary('id');
             $table->foreign('users_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade')->default(null);

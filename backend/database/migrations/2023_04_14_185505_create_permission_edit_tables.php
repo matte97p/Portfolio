@@ -80,6 +80,7 @@ class CreatePermissionEditTables extends Migration
             $table->uuid(PermissionRegistrar::$pivotPermission);
             $table->uuid(PermissionRegistrar::$pivotRole);
             $table->uuid('users_id')->nullable();
+            $table->softDeletes();
 
             $table->foreign(PermissionRegistrar::$pivotPermission)
                 ->references('id') // permission id

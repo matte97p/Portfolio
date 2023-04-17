@@ -93,9 +93,9 @@ class PermissionController extends AbstractCrudController
         }
     }
 
-    public function list(): object
+    public static function list(): array
     {
-        return Permission::all()->pluck('name', 'id');
+        return Permission::all()->pluck('name', 'id')->toArray();
     }
 
     public function give(Request $request): JsonResponse

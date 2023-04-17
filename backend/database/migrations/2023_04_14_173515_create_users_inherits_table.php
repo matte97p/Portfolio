@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         /* CURRENTS */
-        DB::unprepared(DB::raw("CREATE TABLE IF NOT EXISTS users_currents () INHERITS (users);"));
+        DB::unprepared("CREATE TABLE IF NOT EXISTS users_currents () INHERITS (users);");
         Schema::table('users_currents', function (Blueprint $table) {
             $table->primary('id');
         });
@@ -24,7 +24,7 @@ return new class extends Migration
         });
 
         /* HISTORY */
-        DB::unprepared(DB::raw("CREATE TABLE IF NOT EXISTS users_history () INHERITS (users);"));
+        DB::unprepared("CREATE TABLE IF NOT EXISTS users_history () INHERITS (users);");
         Schema::table('users_history', function (Blueprint $table) {
             $table->primary('id');
             $table->foreign('id')->nullable()->references('id')->on('users_currents')->onDelete('cascade')->default(null);
