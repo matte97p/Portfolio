@@ -68,6 +68,8 @@ return [
         */
 
         'use' => [
+            App\Traits\HasUuid::class,
+            Illuminate\Database\Eloquent\Factories\HasFactory::class,
             // Reliese\Database\Eloquent\BitBooleans::class,
             // Reliese\Database\Eloquent\BlamableBehavior::class,
         ],
@@ -229,7 +231,7 @@ return [
         */
 
         'hidden' => [
-            '*secret*', '*password', '*token',
+            '*secret*', '*password', '*token', 'version', 'guard_name',
         ],
 
         /*
@@ -245,7 +247,9 @@ return [
         */
 
         'guarded' => [
-            // 'created_by', 'updated_by'
+            'users_id',
+            'version',
+            '*token'
         ],
 
         /*
@@ -265,6 +269,7 @@ return [
 
         'casts' => [
             '*_json' => 'json',
+            '*_at' => 'datetime',
         ],
 
         /*
@@ -281,6 +286,7 @@ return [
 
         'except' => [
             'migrations',
+            '*_history',
         ],
 
         /*
@@ -294,7 +300,7 @@ return [
         */
 
         'only' => [
-            // 'users',
+            '*_currents',
         ],
 
         /*
@@ -389,7 +395,7 @@ return [
          | that helps to avoid typos in strings when typing field names and allows to use
          | code competition with available model's field names.
          */
-        'with_property_constants' => false,
+        'with_property_constants' => true,
 
         /*
         |--------------------------------------------------------------------------
@@ -410,7 +416,7 @@ return [
         |
         */
         'override_pluralize_for' => [
-
+            '*_history',
         ],
         /*
         |--------------------------------------------------------------------------
@@ -420,7 +426,7 @@ return [
         | if you want the $fillable to be generated in base files
         |
         */
-        'fillable_in_base_files' => false,
+        'fillable_in_base_files' => true,
 
         /*
         |--------------------------------------------------------------------------
@@ -432,7 +438,7 @@ return [
         | NOTE: This requires PHP 7.0 or later.
         |
         */
-        'enable_return_types' => false,
+        'enable_return_types' => true,
     ],
 
     /*
