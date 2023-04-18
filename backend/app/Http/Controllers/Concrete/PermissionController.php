@@ -55,7 +55,7 @@ class PermissionController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\Permission'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\Permission'],
                     'name' => ['required', 'string', 'unique:App\Models\Permission', 'max:50'],
                 ],
                 $this::$errors,
@@ -78,7 +78,7 @@ class PermissionController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\Permission'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\Permission'],
                 ],
                 $this::$errors,
             );

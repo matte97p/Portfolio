@@ -69,7 +69,7 @@ class UserController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\User'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\User'],
                     'name' => ['required', 'string', 'max:50'],
                     'surname' => ['required', 'string', 'max:255'],
                     'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
@@ -106,7 +106,7 @@ class UserController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\User'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\User'],
                 ],
                 $this::$errors,
             );
