@@ -9,5 +9,3 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('/checkToken', [AuthController::class, 'checkToken']);
 });
-
-Route::post('user/create', [UserController::class, 'create']); /* @todo usare quello in users.php ora serve per annulare e rifare migration */
