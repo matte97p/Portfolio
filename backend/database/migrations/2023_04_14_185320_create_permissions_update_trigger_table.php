@@ -23,17 +23,18 @@ return new class extends Migration
 
             then
                 insert into permissions_history (
-                    id, name, guard_name, users_id, created_at, updated_at, deleted_at, version
+                    id, name, guard_name, staff_id, created_at, updated_at, deleted_at, permissions_id, version
                 )
                 values (
-                    old.id,
+                    uuid_generate_v4(),
                     old.name,
                     old.guard_name,
 
-                    users_id,
+                    old.staff_id,
                     now(),
                     old.updated_at,
                     old.deleted_at,
+                    old.id,
                     old.version
                 );
 

@@ -247,7 +247,7 @@ return [
         */
 
         'guarded' => [
-            'users_id',
+            'staff_id',
             'version',
             '*token'
         ],

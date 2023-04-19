@@ -110,6 +110,8 @@ abstract class AbstractApiController extends AbstractGenericController
             $response = $exception->getResponse();
         } catch ( ConnectException $exception ) {
             $response = $exception->getMessage();
+        } catch ( \Exception $exception ) {
+            $response = $exception->getMessage();
         }
 
         // log response

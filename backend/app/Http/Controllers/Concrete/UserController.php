@@ -28,14 +28,14 @@ class UserController extends AbstractCrudController
             $password_role = Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised();
             $validator = Validator::make($request->all(),
                 [
-                    'name' => ['required', 'string', 'max:255'],
-                    'surname' => ['required', 'string', 'max:255'],
+                    'name' => ['required', 'string', 'max:100'],
+                    'surname' => ['required', 'string', 'max:100'],
                     'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
-                    'email' => ['required', 'email', 'unique:App\Models\User', 'min:7'],
-                    'phone' => ['required', 'integer', 'unique:App\Models\User', 'digits_between:6,15'],
+                    // 'email' => ['required', 'email', 'unique:App\Models\User', 'min:7'],
+                    // 'phone' => ['required', 'integer', 'unique:App\Models\User', 'digits_between:6,15'],
                     'gender' => ['required', 'string', 'in:m,f'],
                     'birth_date' => ['required', 'date', 'before:today', 'min:10', 'max:10'],
-                    'password' => ['required', 'confirmed', $password_role],
+                    // 'password' => ['required', 'confirmed', $password_role],
                 ],
                 $this::$errors,
             );
@@ -43,7 +43,7 @@ class UserController extends AbstractCrudController
             if ($validator->fails()) throw ValidationException::withMessages($validator->errors()->all());
 
             $data = $request->all();
-            $data["password"] = bcrypt($request->password);
+            // $data["password"] = bcrypt($request->password);
 
             $user = User::create($data);
 
@@ -63,18 +63,17 @@ class UserController extends AbstractCrudController
         }
     }
 
-    /* @todo finire iniziato */
     public function update(Request $request): JsonResponse
     {
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'uuid', 'exists:App\Models\User'],
-                    'name' => ['required', 'string', 'max:50'],
-                    'surname' => ['required', 'string', 'max:255'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\User,id,deleted_at,NULL'],
+                    'name' => ['required', 'string', 'max:100'],
+                    'surname' => ['required', 'string', 'max:100'],
                     'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
-                    'email' => ['required', 'email', 'unique:App\Models\User', 'min:7'],
-                    'phone' => ['required', 'integer', 'unique:App\Models\User', 'digits_between:6,15'],
+                    // 'email' => ['required', 'email', 'unique:App\Models\User', 'min:7'],
+                    // 'phone' => ['required', 'integer', 'unique:App\Models\User', 'digits_between:6,15'],
                     'gender' => ['required', 'string', 'in:m,f'],
                     'birth_date' => ['required', 'date', 'before:today', 'min:10', 'max:10'],
                 ],
@@ -89,8 +88,8 @@ class UserController extends AbstractCrudController
                 'name' => $request->name,
                 'surname' => $request->surname,
                 'taxid' => $request->taxid,
-                'email' => $request->email,
-                'phone' => $request->phone,
+                // 'email' => $request->email,
+                // 'phone' => $request->phone,
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
             ]);
@@ -106,7 +105,7 @@ class UserController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'uuid', 'exists:App\Models\User'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\User,id,deleted_at,NULL'],
                 ],
                 $this::$errors,
             );
@@ -119,5 +118,10 @@ class UserController extends AbstractCrudController
         } catch (\Exception $e) {
            return CustomHandler::renderCustom($e, "Cancellazione fallita!");
         }
+    }
+
+    public static function list(): array
+    {
+        return User::all()->pluck('taxid', 'id')->toArray();
     }
 }

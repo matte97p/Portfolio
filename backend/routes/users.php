@@ -14,5 +14,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/', [UserController::class, 'read']);
     Route::post('/update', [UserController::class, 'update']);
     Route::post('/delete', [UserController::class, 'delete']);
+
+    Route::post('/list', [UserController::class, 'list']);
 });
 

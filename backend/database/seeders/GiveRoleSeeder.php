@@ -14,7 +14,7 @@ use App\Http\Controllers\Concrete\PermissionController;
 class GiveRoleSeeder extends Seeder
 {
     /**
-     * Create 2 fake data for User::class
+     * seed role -> user && permission -> role
      *
      * @return void
      */
@@ -26,26 +26,28 @@ class GiveRoleSeeder extends Seeder
         $roleList = array_values(RoleController::list());
         $permissionList = array_values(PermissionController::list());
 
-        /* Master */
+        /* Seed Master */
             $giveRoleRequest = new Request(['users' => [$master], 'roles' => ['Super Admin']]);
             $roleController->give($giveRoleRequest);
 
             $givePermissionRequest = new Request(['role' => 'Super Admin', 'permissions' => $permissionList]);
             $roleController->givePermission($givePermissionRequest);
-        /* Master */
+        /* Seed Master */
 
-        foreach(User::where('id', '!=', $master)->get() as $user)
-        {
-            $request = new Request( [ 'users' => [$user->id], 'roles' => [ $roleList[array_rand($roleList)] ] ] );
-            $roleController->give($request);
-        }
+        /* Seed UserRole */
+            foreach(User::where('id', '!=', $master)->get() as $user)
+            {
+                $request = new Request( [ 'users' => [$user->id], 'roles' => [ $roleList[array_rand($roleList)] ] ] );
+                $roleController->give($request);
+            }
+        /* Seed UserRole */
 
-        foreach($roleList as $role)
-        {
-            $request = new Request( [ 'role' => $role, 'permissions' => [ $permissionList[array_rand($permissionList)] ] ] );
-            $roleController->givePermission($request);
-        }
-
-        $this->command->info( 'che bello!' );
+        /* Seed RolePermission */
+            foreach($roleList as $role)
+            {
+                $request = new Request( [ 'role' => $role, 'permissions' => [ $permissionList[array_rand($permissionList)] ] ] );
+                $roleController->givePermission($request);
+            }
+        /* Seed RolePermission */
     }
 }

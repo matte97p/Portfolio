@@ -18,19 +18,23 @@ return new class extends Migration
         DB::unprepared("CREATE TABLE IF NOT EXISTS permissions_currents () INHERITS (permissions);");
         Schema::table('permissions_currents', function (Blueprint $table) {
             $table->primary('id');
-            $table->foreign('users_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade')->default(null);
-        });
-        Schema::table('permissions', function (Blueprint $table) {
-            $table->foreign('users_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade')->default(null);
-            $table->foreign('id')->nullable()->references('id')->on('permissions_currents')->onDelete('cascade')->default(null);
+            $table->foreign('permissions_id')->references('id')->on('permissions_currents')->onDelete('cascade')->nullable();
+
+            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
         });
 
         /* HISTORY */
         DB::unprepared("CREATE TABLE IF NOT EXISTS permissions_history () INHERITS (permissions);");
         Schema::table('permissions_history', function (Blueprint $table) {
             $table->primary('id');
-            $table->foreign('users_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade')->default(null);
-            $table->foreign('id')->nullable()->references('id')->on('permissions_currents')->onDelete('cascade')->default(null);
+            $table->foreign('permissions_id')->references('id')->on('permissions_currents')->onDelete('cascade')->nullable();
+
+            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
+        });
+
+        /* GENERIC */
+        Schema::table('permissions', function (Blueprint $table) {
+            $table->foreign('permissions_id')->references('id')->on('permissions_currents')->onDelete('cascade')->nullable();
         });
     }
 
@@ -41,16 +45,15 @@ return new class extends Migration
      */
     public function down()
     {
-        /* CURRENTS */
+        /* GENERIC */
         Schema::table('permissions', function (Blueprint $table) {
-            $table->dropForeign(['id']);
+            $table->dropForeign(['permissions_id']);
         });
-        Schema::dropIfExists('permissions_currents');
 
         /* HISTORY */
-        Schema::table('permissions_history', function (Blueprint $table) {
-            $table->dropForeign(['id']);
-        });
         Schema::dropIfExists('permissions_history');
+
+        /* CURRENTS */
+        Schema::dropIfExists('permissions_currents');
     }
 };

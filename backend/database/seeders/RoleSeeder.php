@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class RoleSeeder extends Seeder
 {
     /**
-     * Create for role
+     * Seed Role
      *
      * @return void
      */
@@ -63,8 +63,7 @@ class RoleSeeder extends Seeder
         foreach($roles as $role) {
             Role::create([
                 'name' => $role["name"],
-                'guard_name' => 'api',
-                'users_id' => User::findByTaxId("PRNMTT97H28A479G")->id,
+                'staff_id' => User::findByTaxId("PRNMTT97H28A479G")->id,
             ]);
         }
     }

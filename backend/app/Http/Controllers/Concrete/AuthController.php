@@ -31,8 +31,8 @@ class AuthController extends AbstractApiController
     ];
 
     protected static $base_uri = [
-        0 => 'https://backend-portfolio.com',   //prod
-        1 => 'https://backend-portfolio.test/'  //test
+        0 => 'https://backend-nomos.com',   //prod
+        1 => 'https://backend-nomos.test/'  //test
     ];
 
     public function __construct(Request $request)
@@ -61,7 +61,7 @@ class AuthController extends AbstractApiController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'email' => ['required', 'email'],
+                    'username' => ['required'],
                     'password' => ['required', 'string'],
                 ],
                 $this::$errors,
@@ -85,7 +85,7 @@ class AuthController extends AbstractApiController
      */
     private function getToken(): object
     {
-        return json_decode(CacheController::getCache("Bearer." . Auth::id()));
+        return json_decode(CacheController::getCache("Bearer." . Auth::user()->user_id));
     }
 
     /**
@@ -112,7 +112,7 @@ class AuthController extends AbstractApiController
 
             $response = json_decode((string) $response->getBody());
 
-            CacheController::setCache("Bearer." . Auth::id(), json_encode($response));
+            CacheController::setCache("Bearer." . Auth::user()->user_id, json_encode($response));
 
             return response()->json(["message" => "Token aggiornato con successo!", "access_token" => $response->access_token], 201);
 
@@ -142,7 +142,7 @@ class AuthController extends AbstractApiController
                     'grant_type' => 'password',
                     'client_id' => $this->oauth_clients->id,
                     'client_secret' => $this->oauth_clients->secret,
-                    'username' => $request->email,
+                    'username' => $request->username,
                     'password' => $request->password,
                     'scope' => '*',
                 ]
@@ -171,7 +171,7 @@ class AuthController extends AbstractApiController
         if ( ($check = self::checkLogged() ) !== true) { return $check; }
 
         Auth::user()->token()->revoke();
-        CacheController::delCache("Bearer." . Auth::id());
+        CacheController::delCache("Bearer." . Auth::user()->user_id);
 
         return response()->json(["message" => "Logout effettuato con successo!"], 201);
     }

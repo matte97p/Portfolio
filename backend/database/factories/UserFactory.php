@@ -30,23 +30,8 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'surname' => fake()->name(),
             'taxid' => Person::taxId(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'phone' => fake()->phoneNumber(),
             'gender' => fake()->randomElement(['m', 'f']),
             'birth_date' => fake()->unique()->dateTimeBetween('-70 years', '-19 years')->format('Y-m-d'),
-            'password' => bcrypt("$2y$10!aS"),
-            'remember_token' => Str::random(10),
         ];
-    }
-
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
     }
 }

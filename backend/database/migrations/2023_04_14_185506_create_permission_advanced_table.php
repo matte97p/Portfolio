@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\PermissionRegistrar;
 
-class CreatePermissionEditTables extends Migration
+class CreatePermissionAdvancedTable extends Migration
 {
     /**
      * Run the migrations.
@@ -26,71 +26,48 @@ class CreatePermissionEditTables extends Migration
         }
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames, $teams) {
-            $table->uuid(PermissionRegistrar::$pivotPermission);
+            $table->foreignUuid(PermissionRegistrar::$pivotPermission)->references('id')->on($tableNames['permissions'].'_currents')->onDelete('cascade');
 
             $table->string('model_type');
             $table->uuid($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_model_id_model_type_index');
-            $table->uuid('users_id')->nullable();
-            $table->softDeletes();
 
-            $table->foreign(PermissionRegistrar::$pivotPermission)
-                ->references('id') // permission id
-                ->on('permissions_currents')
-                ->onDelete('cascade');
-            if ($teams) {
-                $table->uuid($columnNames['team_foreign_key']);
-                $table->index($columnNames['team_foreign_key'], 'model_has_permissions_team_foreign_key_index');
+            $table->foreignUuid('staff_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade');
+            // $table->timestamps();
+            // $table->softDeletes();
+            // table_names_id
+            // $table->integer('version')->default(1);
 
-                $table->primary([$columnNames['team_foreign_key'], PermissionRegistrar::$pivotPermission, $columnNames['model_morph_key'], 'model_type'],
-                    'model_has_permissions_permission_model_type_primary');
-            } else {
-                $table->primary([PermissionRegistrar::$pivotPermission, $columnNames['model_morph_key'], 'model_type'],
-                    'model_has_permissions_permission_model_type_primary');
-            }
+            $table->primary([PermissionRegistrar::$pivotPermission, $columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_permission_model_type_primary');
 
         });
 
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames, $columnNames, $teams) {
-            $table->uuid(PermissionRegistrar::$pivotRole);
+            $table->foreignUuid(PermissionRegistrar::$pivotRole)->references('id')->on($tableNames['roles'].'_currents')->onDelete('cascade');
 
             $table->string('model_type');
             $table->uuid($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_roles_model_id_model_type_index');
-            $table->uuid('users_id')->nullable();
-            $table->softDeletes();
 
-            $table->foreign(PermissionRegistrar::$pivotRole)
-                ->references('id') // role id
-                ->on('roles_currents')
-                ->onDelete('cascade');
-            if ($teams) {
-                $table->uuid($columnNames['team_foreign_key']);
-                $table->index($columnNames['team_foreign_key'], 'model_has_roles_team_foreign_key_index');
+            $table->foreignUuid('staff_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade');
+            // $table->timestamps();
+            // $table->softDeletes();
+            // table_names_id
+            // $table->integer('version')->default(1);
 
-                $table->primary([$columnNames['team_foreign_key'], PermissionRegistrar::$pivotRole, $columnNames['model_morph_key'], 'model_type'],
-                    'model_has_roles_role_model_type_primary');
-            } else {
-                $table->primary([PermissionRegistrar::$pivotRole, $columnNames['model_morph_key'], 'model_type'],
-                    'model_has_roles_role_model_type_primary');
-            }
+
+            $table->primary([PermissionRegistrar::$pivotRole, $columnNames['model_morph_key'], 'model_type'], 'model_has_roles_role_model_type_primary');
         });
 
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
-            $table->uuid(PermissionRegistrar::$pivotPermission);
-            $table->uuid(PermissionRegistrar::$pivotRole);
-            $table->uuid('users_id')->nullable();
-            $table->softDeletes();
+            $table->foreignUuid(PermissionRegistrar::$pivotPermission)->references('id')->on($tableNames['permissions'].'_currents')->onDelete('cascade');
+            $table->foreignUuid(PermissionRegistrar::$pivotRole)->references('id')->on($tableNames['roles'].'_currents')->onDelete('cascade');
 
-            $table->foreign(PermissionRegistrar::$pivotPermission)
-                ->references('id') // permission id
-                ->on('permissions_currents')
-                ->onDelete('cascade');
-
-            $table->foreign(PermissionRegistrar::$pivotRole)
-                ->references('id') // role id
-                ->on('roles_currents')
-                ->onDelete('cascade');
+            $table->foreignUuid('staff_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade');
+            // $table->timestamps();
+            // $table->softDeletes();
+            // table_names_id
+            // $table->integer('version')->default(1);
 
             $table->primary([PermissionRegistrar::$pivotPermission, PermissionRegistrar::$pivotRole], 'role_has_permissions_permission_id_role_id_primary');
         });

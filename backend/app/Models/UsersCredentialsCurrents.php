@@ -5,13 +5,12 @@ namespace App\Models;
 use App\Traits\HasUuid;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class UsersCredentialsCurrents extends Authenticatable
 {
     use HasUuid, HasApiTokens, HasRoles, Notifiable, SoftDeletes, HasFactory;
 
@@ -20,7 +19,7 @@ class User extends Model
      *
      * @var string
      */
-    protected $table = 'users_currents';
+    protected $table = 'users_credentials_currents';
 
     /**
      * The primary key associated with the table.
@@ -35,11 +34,9 @@ class User extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'surname',
-        'taxid',
-        'gender',
-        'birth_date',
+        'user_id',
+        'username',
+        'password',
     ];
 
     /**
@@ -48,19 +45,10 @@ class User extends Model
      * @var array<int, string>
      */
     protected $hidden = [
+        'password',
+        'remember_token',
         'deleted_at',
         'version',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
     public static function findByPrimary($id)
@@ -68,8 +56,14 @@ class User extends Model
         return self::where('id', $id)->first();
     }
 
-    public static function findByTaxId($taxid)
+    /**
+     * Find the user instance for the given username.
+     *
+     * @param  string $username
+     * @return \App\Models\UsersCredentialsCurrents
+     */
+    public function findForPassport($username)
     {
-        return self::where('taxid', $taxid)->first();
+        return $this->where('username', $username)->first();
     }
 }

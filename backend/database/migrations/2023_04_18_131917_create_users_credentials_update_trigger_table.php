@@ -13,28 +13,25 @@ return new class extends Migration
     public function up()
     {
         DB::unprepared("
-        CREATE OR REPLACE FUNCTION copy_on_users_history ()
+        CREATE OR REPLACE FUNCTION copy_on_users_credentials_history ()
             RETURNS TRIGGER
             LANGUAGE plpgsql
         AS \$function\$
         BEGIN
-            if  old.name                    <> new.name or
-                old.surname                 <> new.surname or
-                old.taxid                   <> new.taxid or
-                old.gender                  <> new.gender or
-                old.birth_date              <> new.birth_date
+            if  old.username                    <> new.username or
+                old.password                    <> new.password or
+                old.user_id                     <> new.user_id
 
             then
-                insert into users_history (
-                    id, name, surname, taxid, gender, birth_date, staff_id, created_at, updated_at, deleted_at, users_id, version
+                insert into users_credentials_history (
+                    id, username, password, user_id, remember_token, staff_id, created_at, updated_at, deleted_at, users_credentials_id, version
                 )
                 values (
                     uuid_generate_v4(),
-                    old.name,
-                    old.surname,
-                    old.taxid,
-                    old.gender,
-                    old.birth_date,
+                    old.username,
+                    old.password,
+                    old.user_id,
+                    old.remember_token,
 
                     old.staff_id,
                     now(),
@@ -53,11 +50,11 @@ return new class extends Migration
         ");
 
         DB::unprepared("
-            CREATE TRIGGER on_users_update_trigger
+            CREATE TRIGGER on_users_credentials_update_trigger
             BEFORE update
-            ON users_currents
+            ON users_credentials_currents
             FOR EACH ROW
-            EXECUTE PROCEDURE copy_on_users_history();
+            EXECUTE PROCEDURE copy_on_users_credentials_history();
         ");
     }
 
@@ -68,11 +65,11 @@ return new class extends Migration
      */
     public function down()
     {
-        DB::unprepared("DROP FUNCTION IF EXISTS copy_on_users_history() CASCADE");
+        DB::unprepared("DROP FUNCTION IF EXISTS copy_on_users_credentials_history() CASCADE");
 
         DB::unprepared("
-            DROP TRIGGER IF EXISTS on_users_update_trigger
-            ON users_currents CASCADE;
+            DROP TRIGGER IF EXISTS on_users_credentials_update_trigger
+            ON users_credentials_currents CASCADE;
         ");
     }
 };

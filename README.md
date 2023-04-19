@@ -192,6 +192,7 @@
    sudo -u postgres psql
    CREATE DATABASE portfolio;
    CREATE USER mario with PASSWORD 'rossi';
+   ALTER USER mario WITH PASSWORD 'rossi'; --se già creato
    GRANT ALL PRIVILEGES ON DATABASE portfolio to mario;
 
    -- on db
@@ -280,3 +281,6 @@ Each guideline describes either a good or bad practice, and all have a consisten
 [reliese-laravel-docs]: https://github.com/reliese/laravel
 
 <!-- UTILITIES -->
+
+[laravel naming conventions]: https://webdevetc.com/blog/laravel-naming-conventions/
+[php faker]: https://fakerphp.github.io/
