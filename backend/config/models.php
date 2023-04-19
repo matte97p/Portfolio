@@ -231,7 +231,7 @@ return [
         */
 
         'hidden' => [
-            '*secret*', '*password', '*token', 'version', 'guard_name',
+            '*secret*', '*password*', '*token*', 'version', 'guard_name', 'deleted_at',
         ],
 
         /*
@@ -286,7 +286,9 @@ return [
 
         'except' => [
             'migrations',
-            '*_history',
+            'roles_currents',
+            'permissions_currents',
+            // '*_history',
         ],
 
         /*
@@ -416,7 +418,6 @@ return [
         |
         */
         'override_pluralize_for' => [
-            '*_history',
         ],
         /*
         |--------------------------------------------------------------------------
