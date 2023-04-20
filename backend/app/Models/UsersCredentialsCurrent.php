@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 // use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Base\UsersCredentialsCurrent as BaseUsersCredentialsCurrent;
 
 class UsersCredentialsCurrent extends BaseUsersCredentialsCurrent
 {
-    use HasApiTokens, HasRoles, SoftDeletes, Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
+    use HasApiTokens, HasRoles, Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
 
 	protected $hidden = [
 		self::PASSWORD,

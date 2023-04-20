@@ -10,4 +10,14 @@ class UsersCurrent extends BaseUsersCurrent
 		self::DELETED_AT,
 		self::VERSION
 	];
+
+    public static function findByPrimary($id)
+    {
+        return self::where('id', $id)->first();
+    }
+
+    public static function findByTaxId($taxid)
+    {
+        return self::where('taxid', $taxid)->first();
+    }
 }

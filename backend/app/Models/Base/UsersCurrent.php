@@ -42,31 +42,31 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $taxid
  * @property string $gender
  * @property Carbon $birth_date
- * @property uuid|null $staff_id
+ * @property string|null $staff_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property uuid|null $users_id
+ * @property string|null $users_id
  * @property int $version
  *
  * @property UsersCurrent|null $users_current
- * @property Collection|RolesCurrent[] $roles_currents
- * @property Collection|UsersCurrent[] $users_currents
- * @property Collection|UsersHistory[] $users_histories
  * @property Collection|User[] $users
- * @property Collection|Role[] $roles
- * @property Collection|RolesHistory[] $roles_histories
+ * @property Collection|UsersCurrent[] $users_currents
  * @property Collection|Permission[] $permissions
+ * @property Collection|UsersHistory[] $users_histories
+ * @property Collection|ModelHasPermission[] $model_has_permissions
+ * @property Collection|Role[] $roles
+ * @property Collection|RolesCurrent[] $roles_currents
+ * @property Collection|RolesHistory[] $roles_histories
  * @property Collection|PermissionsCurrent[] $permissions_currents
  * @property Collection|PermissionsHistory[] $permissions_histories
- * @property Collection|ModelHasPermission[] $model_has_permissions
  * @property Collection|ModelHasRole[] $model_has_roles
  * @property Collection|RoleHasPermission[] $role_has_permissions
  * @property Collection|UsersCredential[] $users_credentials
- * @property Collection|UsersContactsInfoCurrent[] $users_contacts_info_currents
  * @property Collection|UsersCredentialsCurrent[] $users_credentials_currents
  * @property Collection|UsersCredentialsHistory[] $users_credentials_histories
  * @property UsersContactsInfo $users_contacts_info
+ * @property Collection|UsersContactsInfoCurrent[] $users_contacts_info_currents
  * @property Collection|UsersContactsInfoHistory[] $users_contacts_info_histories
  *
  * @package App\Models\Base
@@ -93,12 +93,13 @@ class UsersCurrent extends Model
 
 	protected $casts = [
 		self::ID => 'string',
+		self::TAXID => 'string',
 		self::BIRTH_DATE => 'datetime',
-		self::STAFF_ID => 'uuid',
+		self::STAFF_ID => 'string',
 		self::CREATED_AT => 'datetime',
 		self::UPDATED_AT => 'datetime',
 		self::DELETED_AT => 'datetime',
-		self::USERS_ID => 'uuid',
+		self::USERS_ID => 'string',
 		self::VERSION => 'int'
 	];
 
@@ -116,9 +117,9 @@ class UsersCurrent extends Model
 		return $this->belongsTo(UsersCurrent::class, UsersCurrent::USERS_ID);
 	}
 
-	public function roles_currents(): HasMany
+	public function users(): HasMany
 	{
-		return $this->hasMany(RolesCurrent::class, RolesCurrent::STAFF_ID);
+		return $this->hasMany(User::class, User::USERS_ID);
 	}
 
 	public function users_currents(): HasMany
@@ -126,14 +127,19 @@ class UsersCurrent extends Model
 		return $this->hasMany(UsersCurrent::class, UsersCurrent::USERS_ID);
 	}
 
+	public function permissions(): HasMany
+	{
+		return $this->hasMany(Permission::class, Permission::STAFF_ID);
+	}
+
 	public function users_histories(): HasMany
 	{
 		return $this->hasMany(UsersHistory::class, UsersHistory::USERS_ID);
 	}
 
-	public function users(): HasMany
+	public function model_has_permissions(): HasMany
 	{
-		return $this->hasMany(User::class, User::USERS_ID);
+		return $this->hasMany(ModelHasPermission::class, ModelHasPermission::STAFF_ID);
 	}
 
 	public function roles(): HasMany
@@ -141,14 +147,14 @@ class UsersCurrent extends Model
 		return $this->hasMany(Role::class, Role::STAFF_ID);
 	}
 
+	public function roles_currents(): HasMany
+	{
+		return $this->hasMany(RolesCurrent::class, RolesCurrent::STAFF_ID);
+	}
+
 	public function roles_histories(): HasMany
 	{
 		return $this->hasMany(RolesHistory::class, RolesHistory::STAFF_ID);
-	}
-
-	public function permissions(): HasMany
-	{
-		return $this->hasMany(Permission::class, Permission::STAFF_ID);
 	}
 
 	public function permissions_currents(): HasMany
@@ -159,11 +165,6 @@ class UsersCurrent extends Model
 	public function permissions_histories(): HasMany
 	{
 		return $this->hasMany(PermissionsHistory::class, PermissionsHistory::STAFF_ID);
-	}
-
-	public function model_has_permissions(): HasMany
-	{
-		return $this->hasMany(ModelHasPermission::class, ModelHasPermission::STAFF_ID);
 	}
 
 	public function model_has_roles(): HasMany
@@ -181,11 +182,6 @@ class UsersCurrent extends Model
 		return $this->hasMany(UsersCredential::class, UsersCredential::STAFF_ID);
 	}
 
-	public function users_contacts_info_currents(): HasMany
-	{
-		return $this->hasMany(UsersContactsInfoCurrent::class, UsersContactsInfoCurrent::STAFF_ID);
-	}
-
 	public function users_credentials_currents(): HasMany
 	{
 		return $this->hasMany(UsersCredentialsCurrent::class, UsersCredentialsCurrent::STAFF_ID);
@@ -199,6 +195,11 @@ class UsersCurrent extends Model
 	public function users_contacts_info(): HasOne
 	{
 		return $this->hasOne(UsersContactsInfo::class, UsersContactsInfo::STAFF_ID);
+	}
+
+	public function users_contacts_info_currents(): HasMany
+	{
+		return $this->hasMany(UsersContactsInfoCurrent::class, UsersContactsInfoCurrent::STAFF_ID);
 	}
 
 	public function users_contacts_info_histories(): HasMany

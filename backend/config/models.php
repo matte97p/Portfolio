@@ -270,7 +270,7 @@ return [
         'casts' => [
             '*_json' => 'json',
             '*_at' => 'datetime',
-            'id' => 'string',
+            '*id' => 'string',
         ],
 
         /*

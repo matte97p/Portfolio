@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             'surname' => 'Perino',
             'taxid' => 'PRNMTT97H28A479G',
             'gender' => $faker->randomElement(['m', 'f']),
-            'birth_date' => $faker->date('Y_m_d'),
+            'birth_date' => $faker->date('Y-m-d'),
         ]);
 
         for ($i = 0; $i < 4; $i++) {

@@ -26,24 +26,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class UsersCredentialsCurrent
  *
  * @property string $id
- * @property uuid $user_id
+ * @property string $user_id
  * @property string $username
  * @property string $password
  * @property string|null $remember_token
- * @property uuid $staff_id
+ * @property string $staff_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property uuid|null $users_credentials_id
+ * @property string|null $users_credentials_id
  * @property int $version
  *
  * @property UsersCurrent $users_current
  * @property UsersCredentialsCurrent|null $users_credentials_current
  * @property Collection|UsersCredential[] $users_credentials
- * @property Collection|UsersContactsInfoCurrent[] $users_contacts_info_currents
  * @property Collection|UsersCredentialsCurrent[] $users_credentials_currents
  * @property Collection|UsersCredentialsHistory[] $users_credentials_histories
  * @property UsersContactsInfo $users_contacts_info
+ * @property Collection|UsersContactsInfoCurrent[] $users_contacts_info_currents
  * @property Collection|UsersContactsInfoHistory[] $users_contacts_info_histories
  *
  * @package App\Models\Base
@@ -69,12 +69,12 @@ class UsersCredentialsCurrent extends Model
 
 	protected $casts = [
 		self::ID => 'string',
-		self::USER_ID => 'uuid',
-		self::STAFF_ID => 'uuid',
+		self::USER_ID => 'string',
+		self::STAFF_ID => 'string',
 		self::CREATED_AT => 'datetime',
 		self::UPDATED_AT => 'datetime',
 		self::DELETED_AT => 'datetime',
-		self::USERS_CREDENTIALS_ID => 'uuid',
+		self::USERS_CREDENTIALS_ID => 'string',
 		self::VERSION => 'int'
 	];
 
@@ -100,11 +100,6 @@ class UsersCredentialsCurrent extends Model
 		return $this->hasMany(UsersCredential::class, UsersCredential::USERS_CREDENTIALS_ID);
 	}
 
-	public function users_contacts_info_currents(): HasMany
-	{
-		return $this->hasMany(UsersContactsInfoCurrent::class, UsersContactsInfoCurrent::USER_CREDENTIALS_ID);
-	}
-
 	public function users_credentials_currents(): HasMany
 	{
 		return $this->hasMany(UsersCredentialsCurrent::class, UsersCredentialsCurrent::USERS_CREDENTIALS_ID);
@@ -118,6 +113,11 @@ class UsersCredentialsCurrent extends Model
 	public function users_contacts_info(): HasOne
 	{
 		return $this->hasOne(UsersContactsInfo::class, UsersContactsInfo::USER_CREDENTIALS_ID);
+	}
+
+	public function users_contacts_info_currents(): HasMany
+	{
+		return $this->hasMany(UsersContactsInfoCurrent::class, UsersContactsInfoCurrent::USER_CREDENTIALS_ID);
 	}
 
 	public function users_contacts_info_histories(): HasMany
