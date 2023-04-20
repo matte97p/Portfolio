@@ -3,20 +3,17 @@
 namespace App\Http\Controllers\Concrete;
 
 use Exception;
-use App\Models\User;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Carbon;
-use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Concrete\CacheController;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractApiController;
+use App\Http\Controllers\Concrete\CacheController;
 
 class AuthController extends AbstractApiController
 {
@@ -31,8 +28,8 @@ class AuthController extends AbstractApiController
     ];
 
     protected static $base_uri = [
-        0 => 'https://backend-nomos.com',   //prod
-        1 => 'https://backend-nomos.test/'  //test
+        0 => 'https://backend-portfolio.com',   //prod
+        1 => 'https://backend-portfolio.test/'  //test
     ];
 
     public function __construct(Request $request)

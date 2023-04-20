@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use Faker\Factory;
-use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
-use App\Models\UsersCredentialsCurrents;
+use App\Models\UsersCurrent as User;
+use App\Models\UsersCredentialsCurrent;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserCredentials extends Seeder
@@ -22,7 +22,7 @@ class UserCredentials extends Seeder
 
         $faker = Factory::create();
 
-        UsersCredentialsCurrents::create([
+        UsersCredentialsCurrent::create([
             'user_id' => $master,
             'username' => 'prova@example.net',
             'password' => bcrypt("$2y$10!aS"),
@@ -32,7 +32,7 @@ class UserCredentials extends Seeder
 
         foreach(User::where('id', '!=', $master)->get() as $user)
         {
-            UsersCredentialsCurrents::create([
+            UsersCredentialsCurrent::create([
                 'user_id' => $user->id,
                 'username' => $faker->username(),
                 'password' => bcrypt("$2y$10!aS"),

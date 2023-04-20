@@ -70,7 +70,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\UsersCredentialsCurrents::class,
+            'model' => App\Models\UsersCredentialsCurrent::class,
         ],
     ],
 

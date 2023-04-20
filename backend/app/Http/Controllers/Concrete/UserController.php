@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Concrete;
 
 use Exception;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomHandler;
+use Illuminate\Http\JsonResponse;
+use App\Models\UsersCurrent as User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -30,9 +30,9 @@ class UserController extends AbstractCrudController
                 [
                     'name' => ['required', 'string', 'max:100'],
                     'surname' => ['required', 'string', 'max:100'],
-                    'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
-                    // 'email' => ['required', 'email', 'unique:App\Models\User', 'min:7'],
-                    // 'phone' => ['required', 'integer', 'unique:App\Models\User', 'digits_between:6,15'],
+                    'taxid' => ['required', 'string', 'unique:App\Models\UsersCurrent', 'min:16', 'max:16'],
+                    // 'email' => ['required', 'email', 'unique:App\Models\UsersCurrent', 'min:7'],
+                    // 'phone' => ['required', 'integer', 'unique:App\Models\UsersCurrent', 'digits_between:6,15'],
                     'gender' => ['required', 'string', 'in:m,f'],
                     'birth_date' => ['required', 'date', 'before:today', 'min:10', 'max:10'],
                     // 'password' => ['required', 'confirmed', $password_role],
@@ -68,12 +68,12 @@ class UserController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'uuid', 'exists:App\Models\User,id,deleted_at,NULL'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\UsersCurrent,id,deleted_at,NULL'],
                     'name' => ['required', 'string', 'max:100'],
                     'surname' => ['required', 'string', 'max:100'],
-                    'taxid' => ['required', 'string', 'unique:App\Models\User', 'min:16', 'max:16'],
-                    // 'email' => ['required', 'email', 'unique:App\Models\User', 'min:7'],
-                    // 'phone' => ['required', 'integer', 'unique:App\Models\User', 'digits_between:6,15'],
+                    'taxid' => ['required', 'string', 'unique:App\Models\UsersCurrent', 'min:16', 'max:16'],
+                    // 'email' => ['required', 'email', 'unique:App\Models\UsersCurrent', 'min:7'],
+                    // 'phone' => ['required', 'integer', 'unique:App\Models\UsersCurrent', 'digits_between:6,15'],
                     'gender' => ['required', 'string', 'in:m,f'],
                     'birth_date' => ['required', 'date', 'before:today', 'min:10', 'max:10'],
                 ],
@@ -105,7 +105,7 @@ class UserController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'uuid', 'exists:App\Models\User,id,deleted_at,NULL'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\UsersCurrent,id,deleted_at,NULL'],
                 ],
                 $this::$errors,
             );

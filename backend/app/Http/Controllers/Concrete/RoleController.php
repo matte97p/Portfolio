@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Concrete;
 
 use Exception;
 use App\Models\Role;
-use App\Models\User;
-use App\Models\Permission;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomHandler;
+use Illuminate\Http\JsonResponse;
+use App\Models\UsersCurrent as User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractCrudController;
@@ -105,7 +104,7 @@ class RoleController extends AbstractCrudController
             $validator = Validator::make($request->all(),
                 [
                     'users' => ['required', 'array', 'min:1'],
-                    'users.*' => ['uuid', 'exists:App\Models\User,id,deleted_at,NULL'],
+                    'users.*' => ['uuid', 'exists:App\Models\UsersCurrent,id,deleted_at,NULL'],
                     'roles' => ['required', 'array', 'min:1'],
                     'roles.*' => ['string', 'exists:App\Models\Role,name,deleted_at,NULL'], // @todo name or uuid ??
                 ],
@@ -131,7 +130,7 @@ class RoleController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'user' => ['required', 'uuid', 'exists:App\Models\User,id,deleted_at,NULL'],
+                    'user' => ['required', 'uuid', 'exists:App\Models\UsersCurrent,id,deleted_at,NULL'],
                     'roles' => ['required', 'array', 'min:1'],
                     'roles.*' => ['string', 'exists:App\Models\Role,name,deleted_at,NULL'], // @todo name or uuid ??
                 ],

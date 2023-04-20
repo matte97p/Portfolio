@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use GuzzleHttp\Utils;
 use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
-use GuzzleHttp\RequestOptions;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\AbstractGenericController;
 

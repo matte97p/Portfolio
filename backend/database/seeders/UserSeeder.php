@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use Faker\Factory;
-use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Faker\Provider\it_IT\Person;
+use App\Models\UsersCurrent as User;
 
 class UserSeeder extends Seeder
 {

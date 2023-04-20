@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use Faker\Factory;
-use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Database\Seeder;
 use Faker\Provider\it_IT\Person;
+use App\Models\UsersCurrent as User;
 use App\Http\Controllers\Concrete\RoleController;
 use App\Http\Controllers\Concrete\PermissionController;
 
