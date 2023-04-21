@@ -287,6 +287,7 @@ return [
 
         'except' => [
             'migrations',
+            'users_credentials_currents',
             'roles_currents',
             'permissions_currents',
             // '*_history',

@@ -6,6 +6,7 @@
 
 namespace App\Models\Base;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\UsersContactsInfo;
 use App\Models\UsersContactsInfoCurrent;
 use App\Models\UsersContactsInfoHistory;
@@ -48,7 +49,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models\Base
  */
-class UsersCredentialsCurrent extends Model
+class UsersCredentialsCurrent extends Authenticatable
 {
 	use SoftDeletes;
 	use HasUuid;
