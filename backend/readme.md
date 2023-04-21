@@ -1,25 +1,190 @@
-## Laravel PHP Framework
+<a id="readme-top"></a>
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/downloads.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+    <img src="storage/app/public/GitHub-logo.png" alt="Logo" width="80" height="80">
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, and caching.
+  <h3 align="center">Portfolio</h3>
+</div>
 
-Laravel aims to make the development process a pleasing one for the developer without sacrificing application functionality. Happy developers make the best code. To this end, we've attempted to combine the very best of what we have seen in other web frameworks, including frameworks implemented in other languages, such as Ruby on Rails, ASP.NET MVC, and Sinatra.
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#namespace">Namespace</a></li>
+        <li><a href="#login">Login</a></li>
+        <li><a href="#controller">Controller</a></li>
+        <li><a href="#uuid">UUID</a></li>
+        <li><a href="#struttura-del-db">Struttura del DB</a></li>
+        <li><a href="#postgresql-inherits">PostgreSQL INHERITS</a></li>
+        <li><a href="#legenda-inherits">Legenda INHERITS</a></li>
+  </ol>
+</details>
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+## Portfolio
 
-## Official Documentation
+> Conoscenze richieste:
+> [Laravel](http://laravel.com/docs);
+> [PostgreSQL](https://www.postgresql.org/docs/);
 
-Documentation for the entire framework can be found on the [Laravel website](http://laravel.com/docs).
+Rappresenta lo scheletro del nuovo backend. Leggi il generico README.md di progetto per avere maggiori informazioni.
 
-### Contributing To Laravel
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-**All issues and pull requests should be filed on the [laravel/framework](http://github.com/laravel/framework) repository.**
+---
 
-### License
+## Namespace
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+**Principali cartelle del progetto(non vengono percorse tutte le cartelle base di Laravel fare riferimento alla [PATH ufficiale Laravel](https://laravel.com/docs/10.x/structure).**
+
+    Portfolio
+    |__ app
+    |   |__ Exceptions -> Handler di eccezione custom
+    |   |__ Http
+    |   |   |__ Controllers
+    |   |   |   |__ *.php -> astratti *
+    |   |   |   |__ Concrete
+    |   |   |__ Middleware
+    |   |__ Models *
+    |   |   |__ *.php -> concreti
+    |   |   |__ Base *
+    |   |__ Providers
+    |   |__ Traits
+    |   |__ Utils
+    |       |__ ...
+    |__ bootstrap
+    |   |__ ...
+    |__ config
+    |__ database
+    |   |__ factories
+    |   |__ migrations
+    |   |__ seeders
+    |__ lang
+    |   |__ ...
+    |__ routes
+    |   |__ ...
+    |__ storage
+    |   |__ ...
+    |   |__ logs *
+    |       |__ api
+    |       |__ internal
+    |__ ...
+
+**\*** : [Classi Astratte](https://www.php.net/manual/en/language.oop5.abstract.php)
+
+**\*** : i `Modelli` sono autogenerati con l'utilizzo della libreria [Reliese Laravel](https://github.com/reliese/laravel) e vengono aggiornato sulla base della configurazione a DB col comando:
+
+```sh
+php artisan code:models --table=\*\*
+```
+
+Qualsiasi customizzazione (o modello aggiuntivo) deve essere effettuata nella loro estensione(cartella Models) e non nel generato(cartella Base).
+
+**\*** : i file di `LOG` registrano ogni attività esterna (API) che interna (internal) che viene effettuata.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Login
+
+> Conoscenze richieste:
+> [SSO](https://it.wikipedia.org/wiki/Single_sign-on);
+> [Oauth2](https://oauth.net/2/);
+
+Passport-Laravel fornisce un sistema di login OAuth2 con il quale otteniamo un SSO dall'ente che detiene le credenziali criptate di accesso utilizzando Bearer Token oppure permette
+l'autocertificazione ove non esiste il servizio di autenticazione.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Controller
+
+> Conoscenze richieste:
+> [CRUD](https://it.wikipedia.org/wiki/CRUD);
+> [Classi Astratte](https://www.php.net/manual/en/language.oop5.abstract.php);
+
+I controller sono gestiti mediante due astratti principali `AbstractApiController` e `AbstractCrudController` (entrambi estendono `AbstractGenericController`) divisi ovviamente quindi
+in controller CRUD per interazioni interna col DB (architettura a microservizi) e chiamate API esterne.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## UUID
+
+> Conoscenze richieste:
+> [UUID](https://it.wikipedia.org/wiki/Universally_unique_identifier);
+
+Tutti gli ID del database interno sono gestiti con UUID
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Struttura del DB
+
+> Conoscenze richieste:
+> [PostgreSQL Inherits](#postgresql-inherits);
+
+**L'ereditarietà è un concetto fondamentale per struttura scelta:**
+
+[LEGENDA](#legenda-inherits)
+
+-   **`Tabelle Generiche`**
+
+    ```sh
+    roles -> unione dei figli
+    |__
+        roles_currents -> Versioni attuali
+        roles_history -> Versioni passate
+    ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## PostgreSQL INHERITS
+
+> **_NOTE:_** PostgreSQL implementa l'ereditarietà delle tabelle, che può essere uno strumento utile per integrare la gestione Object Oriented nelle logiche di db invece che a BE.
+> [OFFICIAL DOCS](https://www.postgresql.org/docs/9.1/ddl-inherit.html);
+
+```sh
+CREATE TABLE cities (
+     name            text,
+     population      float,
+     altitude        int
+ );
+
+ CREATE TABLE capitals (
+     state           char(2)
+ ) INHERITS (cities);
+```
+
+**Il comando INHERITS permette alla tabella `capitals` di ereditare tutte le colonne di `cities`.**
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Legenda INHERITS
+
+```sh
+|__ -> INHERITS
+```
+
+**`VERSIONI`**
+
+**Quando una riga a DB viene modificata si attiva un trigger che registra la sua versione precedente alla modifica in una tabella di storico \*\_history.**
+
+```sh
+*_currents -> Versioni attuali del dato.
+*_history -> Versioni passate del dato.
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---

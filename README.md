@@ -1,11 +1,9 @@
-<a name="readme-top"></a>
+<a id="readme-top"></a>
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/JosephTaverniti/SSM_LARAVEL_BackEnd">
-    <img src="storage/app/public/GitHub-logo.png" alt="Logo" width="80" height="80">
-  </a>
+  <img src="storage/app/public/GitHub-logo.png" alt="Logo" width="80" height="80">
 
   <h3 align="center">Portfolio</h3>
 </div>
