@@ -3,10 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+
+    const table_name = 'permissions';
     /**
      * Run the migrations.
      *
@@ -15,26 +16,19 @@ return new class extends Migration
     public function up()
     {
         /* CURRENTS */
-        DB::unprepared("CREATE TABLE IF NOT EXISTS permissions_currents () INHERITS (permissions);");
-        Schema::table('permissions_currents', function (Blueprint $table) {
-            $table->primary('id');
-            $table->foreign('permissions_id')->references('id')->on('permissions_currents')->onDelete('cascade')->nullable();
-
-            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
+        Schema::table(self::table_name.'_currents', function (Blueprint $table) {
+            $table->inherits(self::table_name);
         });
 
         /* HISTORY */
-        DB::unprepared("CREATE TABLE IF NOT EXISTS permissions_history () INHERITS (permissions);");
-        Schema::table('permissions_history', function (Blueprint $table) {
-            $table->primary('id');
-            $table->foreign('permissions_id')->references('id')->on('permissions_currents')->onDelete('cascade')->nullable();
-
-            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
+        Schema::table(self::table_name.'_history', function (Blueprint $table) {
+            $table->inherits(self::table_name);
+            $table->foreignCurrent(self::table_name);
         });
 
         /* GENERIC */
-        Schema::table('permissions', function (Blueprint $table) {
-            $table->foreign('permissions_id')->references('id')->on('permissions_currents')->onDelete('cascade')->nullable();
+        Schema::table(self::table_name, function (Blueprint $table) {
+            $table->foreignCurrent(self::table_name);
         });
     }
 
@@ -46,14 +40,14 @@ return new class extends Migration
     public function down()
     {
         /* GENERIC */
-        Schema::table('permissions', function (Blueprint $table) {
-            $table->dropForeign(['permissions_id']);
+        Schema::table(self::table_name, function (Blueprint $table) {
+            $table->dropForeign([self::table_name.'_id']);
         });
 
         /* HISTORY */
-        Schema::dropIfExists('permissions_history');
+        Schema::dropIfExists(self::table_name.'_history');
 
         /* CURRENTS */
-        Schema::dropIfExists('permissions_currents');
+        Schema::dropIfExists(self::table_name.'_currents');
     }
 };

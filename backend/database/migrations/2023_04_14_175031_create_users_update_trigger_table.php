@@ -26,7 +26,8 @@ return new class extends Migration
 
             then
                 insert into users_history (
-                    id, name, surname, taxid, gender, birth_date, staff_id, created_at, updated_at, deleted_at, users_id, version
+                    id, name, surname, taxid, gender, birth_date,
+                    staff_id, created_at, updated_at, deleted_at, users_id, version
                 )
                 values (
                     uuid_generate_v4(),

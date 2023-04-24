@@ -30,11 +30,7 @@ class CreatePermissionBasicTable extends Migration
             $table->string('name');
             $table->string('guard_name');
 
-            $table->foreignUuid('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->uuid('permissions_id')->nullable();
-            $table->integer('version')->default(1);
+            $table->commonFields();
 
             $table->unique(['name', 'guard_name']);
         });
@@ -44,11 +40,7 @@ class CreatePermissionBasicTable extends Migration
             $table->string('name');
             $table->string('guard_name');
 
-            $table->foreignUuid('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->uuid('roles_id')->nullable()->nullable();
-            $table->integer('version')->default(1);
+            $table->commonFields();
 
             $table->unique(['name', 'guard_name']);
         });

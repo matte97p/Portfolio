@@ -33,10 +33,6 @@ class CreatePermissionAdvancedTable extends Migration
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_model_id_model_type_index');
 
             $table->foreignUuid('staff_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade');
-            // $table->timestamps();
-            // $table->softDeletes();
-            // table_names_id
-            // $table->integer('version')->default(1);
 
             $table->primary([PermissionRegistrar::$pivotPermission, $columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_permission_model_type_primary');
 
@@ -50,11 +46,6 @@ class CreatePermissionAdvancedTable extends Migration
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_roles_model_id_model_type_index');
 
             $table->foreignUuid('staff_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade');
-            // $table->timestamps();
-            // $table->softDeletes();
-            // table_names_id
-            // $table->integer('version')->default(1);
-
 
             $table->primary([PermissionRegistrar::$pivotRole, $columnNames['model_morph_key'], 'model_type'], 'model_has_roles_role_model_type_primary');
         });
