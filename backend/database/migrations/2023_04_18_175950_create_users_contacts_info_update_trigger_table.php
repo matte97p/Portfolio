@@ -24,11 +24,11 @@ return new class extends Migration
                 old.location                    <> new.location or
                 old.zip                         <> new.zip or
                 old.user_id                     <> new.user_id or
-                old.user_credentials_id         <> new.user_credentials_id or
 
             then
                 insert into users_contacts_info_history (
-                    id, phone, email, address, location, zip, user_id, user_credentials_id, staff_id, created_at, updated_at, deleted_at, users_contacts_info_id, version
+                    id, phone, email, address, location, zip, user_id,
+                    staff_id, created_at, updated_at, deleted_at, users_contacts_info_id, version
                 )
                 values (
                     uuid_generate_v4(),
@@ -38,7 +38,6 @@ return new class extends Migration
                     old.location,
                     old.zip,
                     old.user_id,
-                    old.user_credentials_id,
 
                     old.staff_id,
                     now(),

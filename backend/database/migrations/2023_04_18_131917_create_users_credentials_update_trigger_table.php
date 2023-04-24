@@ -24,7 +24,8 @@ return new class extends Migration
 
             then
                 insert into users_credentials_history (
-                    id, username, password, user_id, remember_token, staff_id, created_at, updated_at, deleted_at, users_credentials_id, version
+                    id, username, password, user_id, remember_token,
+                    staff_id, created_at, updated_at, deleted_at, users_credentials_id, version
                 )
                 values (
                     uuid_generate_v4(),

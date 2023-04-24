@@ -3,10 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+
+    const table_name = 'roles';
     /**
      * Run the migrations.
      *
@@ -15,26 +16,19 @@ return new class extends Migration
     public function up()
     {
         /* CURRENTS */
-        DB::unprepared("CREATE TABLE IF NOT EXISTS roles_currents () INHERITS (roles);");
-        Schema::table('roles_currents', function (Blueprint $table) {
-            $table->primary('id');
-            $table->foreign('roles_id')->references('id')->on('roles_currents')->onDelete('cascade')->nullable();
-
-            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
+        Schema::table(self::table_name.'_currents', function (Blueprint $table) {
+            $table->inherits(self::table_name);
         });
 
         /* HISTORY */
-        DB::unprepared("CREATE TABLE IF NOT EXISTS roles_history () INHERITS (roles);");
-        Schema::table('roles_history', function (Blueprint $table) {
-            $table->primary('id');
-            $table->foreign('roles_id')->references('id')->on('roles_currents')->onDelete('cascade')->nullable();
-
-            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
+        Schema::table(self::table_name.'_history', function (Blueprint $table) {
+            $table->inherits(self::table_name);
+            $table->foreignCurrent(self::table_name);
         });
 
         /* GENERIC */
-        Schema::table('roles', function (Blueprint $table) {
-            $table->foreign('roles_id')->references('id')->on('roles_currents')->onDelete('cascade')->nullable();
+        Schema::table(self::table_name, function (Blueprint $table) {
+            $table->foreignCurrent(self::table_name);
         });
     }
 
@@ -46,14 +40,14 @@ return new class extends Migration
     public function down()
     {
         /* GENERIC */
-        Schema::table('roles', function (Blueprint $table) {
-            $table->dropForeign(['roles_id']);
+        Schema::table(self::table_name, function (Blueprint $table) {
+            $table->dropForeign([self::table_name.'_id']);
         });
 
         /* HISTORY */
-        Schema::dropIfExists('roles_history');
+        Schema::dropIfExists(self::table_name.'_history');
 
         /* CURRENTS */
-        Schema::dropIfExists('roles_currents');
+        Schema::dropIfExists(self::table_name.'_currents');
     }
 };

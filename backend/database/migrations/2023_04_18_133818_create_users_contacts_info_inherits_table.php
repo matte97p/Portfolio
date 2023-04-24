@@ -3,10 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    const table_name = 'users_contacts_info';
+
     /**
      * Run the migrations.
      *
@@ -15,30 +16,23 @@ return new class extends Migration
     public function up()
     {
         /* CURRENTS */
-        DB::unprepared("CREATE TABLE IF NOT EXISTS users_contacts_info_currents () INHERITS (users_contacts_info);");
-        Schema::table('users_contacts_info_currents', function (Blueprint $table) {
-            $table->primary('id');
-            $table->foreign('users_contacts_info_id')->references('id')->on('users_contacts_info_currents')->onDelete('cascade')->nullable();
+        Schema::table(self::table_name.'_currents', function (Blueprint $table) {
+            $table->inherits(self::table_name);
 
-            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users_currents')->onDelete('cascade');
-            $table->foreign('user_credentials_id')->references('id')->on('users_credentials_currents')->onDelete('cascade');
         });
 
         /* HISTORY */
-        DB::unprepared("CREATE TABLE IF NOT EXISTS users_contacts_info_history () INHERITS (users_contacts_info);");
-        Schema::table('users_contacts_info_history', function (Blueprint $table) {
-            $table->primary('id');
-            $table->foreign('users_contacts_info_id')->references('id')->on('users_contacts_info_currents')->onDelete('cascade')->nullable();
+        Schema::table(self::table_name.'_history', function (Blueprint $table) {
+            $table->inherits(self::table_name);
+            $table->foreignCurrent(self::table_name);
 
-            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users_currents')->onDelete('cascade');
-            $table->foreign('user_credentials_id')->references('id')->on('users_credentials_currents')->onDelete('cascade');
         });
 
         /* GENERIC */
-        Schema::table('users_contacts_info', function (Blueprint $table) {
-            $table->foreign('users_contacts_info_id')->references('id')->on('users_contacts_info_currents')->onDelete('cascade')->nullable();
+        Schema::table(self::table_name, function (Blueprint $table) {
+            $table->foreignCurrent(self::table_name);
         });
     }
 
@@ -50,14 +44,14 @@ return new class extends Migration
     public function down()
     {
         /* GENERIC */
-        Schema::table('users_contacts_info', function (Blueprint $table) {
-            $table->dropForeign(['users_contacts_info_id']);
+        Schema::table(self::table_name, function (Blueprint $table) {
+            $table->dropForeign([self::table_name.'_id']);
         });
 
         /* HISTORY */
-        Schema::dropIfExists('users_contacts_info_history');
+        Schema::dropIfExists(self::table_name.'_history');
 
         /* CURRENTS */
-        Schema::dropIfExists('users_contacts_info_currents');
+        Schema::dropIfExists(self::table_name.'_currents');
     }
 };

@@ -23,7 +23,8 @@ return new class extends Migration
 
             then
                 insert into roles_history (
-                    id, name, guard_name, staff_id, created_at, updated_at, deleted_at, roles_id, version
+                    id, name, guard_name,
+                    staff_id, created_at, updated_at, deleted_at, roles_id, version
                 )
                 values (
                     uuid_generate_v4(),
