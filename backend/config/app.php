@@ -199,6 +199,7 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Reliese\Coders\CodersServiceProvider::class,
+        App\Providers\AppMigrationServiceProvider::class,
     ],
 
     /*

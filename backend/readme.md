@@ -173,3 +173,35 @@ CREATE TABLE cities (
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
+
+## Migration Command
+
+**Per creare la struttura di base di una migration utilizzare i comandi qua di seguito e poi customizzare dove necessario.**
+
+**`New Table`**
+
+```
+php artisan make:table table_name
+```
+
+**`Basic Inherits Tables`**
+
+```
+php artisan make:inherit table_name
+```
+
+**`Trigger Insert`**
+
+```
+php artisan make:trigger_i table_name
+```
+
+**`Trigger Update`**
+
+```
+php artisan make:trigger_u table_name
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---

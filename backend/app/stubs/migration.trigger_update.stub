@@ -1,0 +1,72 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        DB::unprepared("
+        CREATE OR REPLACE FUNCTION copy_on_{{ table }}_history ()
+            RETURNS TRIGGER
+            LANGUAGE plpgsql
+        AS \$function\$
+        BEGIN
+            if  old.field                       <> new.field or
+                old.field                       <> new.field
+
+            then
+                insert into {{ table }}_history (
+                    id, //Fields
+                    staff_id, created_at, updated_at, deleted_at, {{ table }}_id, version
+                )
+                values (
+                    uuid_generate_v4(),
+                    //Fields
+
+                    old.staff_id,
+                    now(),
+                    old.updated_at,
+                    old.deleted_at,
+                    old.id,
+                    old.version
+                );
+
+                new.version = old.version+1;
+            end if;
+
+            return new;
+        END;
+        \$function\$
+        ");
+
+        DB::unprepared("
+            CREATE TRIGGER on_{{ table }}_update_trigger
+            BEFORE update
+            ON {{ table }}_currents
+            FOR EACH ROW
+            EXECUTE PROCEDURE copy_on_{{ table }}_history();
+        ");
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        DB::unprepared("DROP FUNCTION IF EXISTS copy_on_{{ table }}_history() CASCADE");
+
+        DB::unprepared("
+            DROP TRIGGER IF EXISTS on_{{ table }}_update_trigger
+            ON {{ table }}_currents CASCADE;
+        ");
+    }
+};
