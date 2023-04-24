@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use GuzzleHttp\Utils;
 use App\Utils\Logger\Logger;
 use Illuminate\Http\Request;
-use GuzzleHttp\RequestOptions;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\AbstractGenericController;
 
@@ -38,21 +36,15 @@ abstract class AbstractCrudController extends AbstractGenericController
     abstract protected function update(Request $request): JsonResponse; //U
     abstract protected function delete(Request $request): JsonResponse; //D
 
-    /**
-     * @todo
-     *
-     * @return void
-     */
-    protected function request()
+    protected function request(): void
     {
-        $logger = $this->logger;
-        $process_mark = $logger->getProcessMark();
+        $process_mark = $this->logger->getProcessMark();
 
         // log request
         $this->log(
             $this->getRequestLogEntry(),
             $process_mark,
-            $logger::ACTION_REQUEST
+            $this->logger::ACTION_REQUEST
         );
     }
 

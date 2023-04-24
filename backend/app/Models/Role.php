@@ -37,7 +37,7 @@ class Role extends RoleSpatie
     protected $fillable = [
         'name',
         'guard_name',
-        'users_id',
+        'staff_id',
     ];
 
     /**
@@ -66,12 +66,12 @@ class Role extends RoleSpatie
     }
 
     /**
-     * RoleController create append guard_name and users_id
+     * RoleController create append guard_name and staff_id
      */
     public static function create(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
-        if(Auth::check()) $attributes['users_id'] = Auth::id();
+        if(Auth::check()) $attributes['staff_id'] = Auth::user()->user_id;
         return static::query()->create($attributes);
     }
 }

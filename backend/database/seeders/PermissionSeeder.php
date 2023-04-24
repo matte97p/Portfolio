@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Permission;
 use Illuminate\Database\Seeder;
+use App\Models\UsersCurrent as User;
 
 class PermissionSeeder extends Seeder
 {
     /**
-     * Create for Permission
+     * Seed Permission
      *
      * @return void
      */
@@ -39,8 +39,7 @@ class PermissionSeeder extends Seeder
         foreach($permissions as $permission) {
             Permission::create([
                 'name' => $permission["name"],
-                'guard_name' => 'api',
-                'users_id' => User::findByTaxId("PRNMTT97H28A479G")->id,
+                'staff_id' => User::findByTaxId("PRNMTT97H28A479G")->id,
             ]);
         }
     }

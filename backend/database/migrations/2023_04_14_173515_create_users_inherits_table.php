@@ -15,19 +15,28 @@ return new class extends Migration
     public function up()
     {
         /* CURRENTS */
-        DB::unprepared(DB::raw("CREATE TABLE IF NOT EXISTS users_currents () INHERITS (users);"));
+        DB::unprepared("CREATE TABLE IF NOT EXISTS users_currents () INHERITS (users);");
         Schema::table('users_currents', function (Blueprint $table) {
             $table->primary('id');
-        });
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('id')->nullable()->references('id')->on('users_currents')->onDelete('cascade')->default(null);
+            $table->foreign('users_id')->references('id')->on('users_currents')->onDelete('cascade')->default(null);
+
+            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade')->default(null);
         });
 
         /* HISTORY */
-        DB::unprepared(DB::raw("CREATE TABLE IF NOT EXISTS users_history () INHERITS (users);"));
+        DB::unprepared("CREATE TABLE IF NOT EXISTS users_history () INHERITS (users);");
         Schema::table('users_history', function (Blueprint $table) {
             $table->primary('id');
-            $table->foreign('id')->nullable()->references('id')->on('users_currents')->onDelete('cascade')->default(null);
+            $table->foreign('users_id')->references('id')->on('users_currents')->onDelete('cascade')->default(null);
+
+            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade')->default(null);
+        });
+
+        /* GENERIC */ //aggiungo staff_id foreign perchè non esiste la tabella in origine
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('users_id')->references('id')->on('users_currents')->onDelete('cascade')->default(null);
+
+            $table->foreign('staff_id')->references('id')->on('users_currents')->onDelete('cascade')->default(null);
         });
     }
 
@@ -38,16 +47,16 @@ return new class extends Migration
      */
     public function down()
     {
-        /* CURRENTS */
+        /* GENERIC */
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['id']);
+            $table->dropForeign(['users_id']);
+            $table->dropForeign(['staff_id']);
         });
-        Schema::dropIfExists('users_currents');
 
         /* HISTORY */
-        Schema::table('users_history', function (Blueprint $table) {
-            $table->dropForeign(['id']);
-        });
         Schema::dropIfExists('users_history');
+
+        /* CURRENTS */
+        Schema::dropIfExists('users_currents');
     }
 };

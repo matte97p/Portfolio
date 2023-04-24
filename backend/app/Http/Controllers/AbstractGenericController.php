@@ -41,6 +41,6 @@ abstract class AbstractGenericController extends BaseController
 
     protected function subText(): string
     {
-        return ($this->test_environment ?'[TEST]':'') . ('[User:' . (Auth::id()??'Anon') . ']');
+        return ($this->test_environment ?'[TEST]':'') . ('[User:' . (Auth::user()->user_id??'Anon') . ']');
     }
 }

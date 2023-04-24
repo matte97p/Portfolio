@@ -158,6 +158,8 @@ return [
         'id' => [
             'required' => 'Inserire l\'id.',
             'integer' => 'L\'id non è valido.',
+            'uuid' => 'L\'id non è valido.',
+            'exists' => 'L\'id non è valido.',
         ],
         'name' => [
             'required' => 'Inserire il nome.',
@@ -165,12 +167,36 @@ return [
             'unique' => 'Il nome è già registrato.',
             'max' => 'Nome troppo lungo.',
         ],
+        'surname' => [
+            'required' => 'Inserire il cognome.',
+            'string' => 'Il cognome non è valido.',
+            'unique' => 'Il cognome è già registrato.',
+            'max' => 'Cognome troppo lungo.',
+        ],
+        'gender' => [
+            'required' => 'Inserire il sesso.',
+            'string' => 'Il sesso non è valido.',
+            'in' => 'Il sesso non è valido.',
+        ],
+        'birth_date' => [
+            'required' => 'Inserire la data di nascita.',
+            'date' => 'La data di nascita non è valida.',
+            'before' => 'La data di nascita deve essere precedente ad oggi.',
+            'min' => 'La data di nascita non è valida.',
+            'max' => 'La data di nascita non è valida.',
+        ],
         'taxid' => [
             'required' => 'Inserire il codice fiscale.',
             'string' => 'Il codice fiscale non è valida.',
             'unique' => 'Il codice fiscale è già registrato.',
             'min' => 'Codice fiscale troppo corto.',
             'max' => 'Codice fiscale troppo lungo.',
+        ],
+        'phone' => [
+            'required' => 'Inserire il numero di telefono.',
+            'integer' => 'Il numero di telefono non è valido.',
+            'unique' => 'Il numero di telefono è già registrato.',
+            'digits_between' => 'Il numero di telefono non è valido.',
         ],
         'email' => [
             'required' => 'Inserire l\'email.',
@@ -182,6 +208,10 @@ return [
             'string' => 'La password non è valida.',
             'confirmed' => 'Password di conferma non corrisponde.',
         ],
+        'user' => [
+            'required' => 'Scegli un utente.',
+            'string' => 'Errore nella scelta dell\'utente.',
+        ],
         'users' => [
             'required' => 'Scegli almeno un utente.',
             'array' => 'Scegli almeno un utente.',
@@ -189,11 +219,11 @@ return [
         ],
         'users.*' => [
             'string' => 'Errore nella scelta dell\'utente.',
-            'exists' => 'Utente inesistente.'
+            'exists' => 'Utente inesistente.',
         ],
-        'user' => [
-            'required' => 'Scegli un utente.',
-            'string' => 'Errore nella scelta dell\'utente.',
+        'role' => [
+            'required' => 'Scegli un ruolo.',
+            'string' => 'Errore nella scelta del ruolo.',
         ],
         'roles' => [
             'required' => 'Scegli almeno un ruolo.',
@@ -202,11 +232,11 @@ return [
         ],
         'roles.*' => [
             'string' => 'Errore nella scelta del ruolo.',
-            'exists' => 'Ruolo inesistente.'
+            'exists' => 'Ruolo inesistente.',
         ],
-        'role' => [
-            'required' => 'Scegli un ruolo.',
-            'string' => 'Errore nella scelta del ruolo.',
+        'permission' => [
+            'required' => 'Scegli un permesso.',
+            'string' => 'Errore nella scelta del permesso.',
         ],
         'permissions' => [
             'required' => 'Scegli almeno un permesso.',
@@ -215,11 +245,7 @@ return [
         ],
         'permissions.*' => [
             'string' => 'Errore nella scelta del permesso.',
-            'exists' => 'Permesso inesistente.'
-        ],
-        'permission' => [
-            'required' => 'Scegli un permesso.',
-            'string' => 'Errore nella scelta del permesso.',
+            'exists' => 'Permesso inesistente.',
         ],
     ],
 

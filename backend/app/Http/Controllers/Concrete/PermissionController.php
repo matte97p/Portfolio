@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Concrete;
 
 use Exception;
-use App\Models\User;
 use App\Models\Permission;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomHandler;
+use Illuminate\Http\JsonResponse;
+use App\Models\UsersCurrent as User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\AbstractCrudController;
@@ -55,7 +55,7 @@ class PermissionController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\Permission'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\Permission,id,deleted_at,NULL'],
                     'name' => ['required', 'string', 'unique:App\Models\Permission', 'max:50'],
                 ],
                 $this::$errors,
@@ -78,7 +78,7 @@ class PermissionController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'id' => ['required', 'integer', 'exists:App\Models\Permission'],
+                    'id' => ['required', 'uuid', 'exists:App\Models\Permission,id,deleted_at,NULL'],
                 ],
                 $this::$errors,
             );
@@ -93,9 +93,9 @@ class PermissionController extends AbstractCrudController
         }
     }
 
-    public function list(): object
+    public static function list(): array
     {
-        return Permission::all()->pluck('name', 'id');
+        return Permission::all()->pluck('name', 'id')->toArray();
     }
 
     public function give(Request $request): JsonResponse
@@ -104,9 +104,9 @@ class PermissionController extends AbstractCrudController
             $validator = Validator::make($request->all(),
                 [
                     'users' => ['required', 'array', 'min:1'],
-                    'users.*.*' => ['uuid', 'exists:App\Models\User,id'],
+                    'users.*.*' => ['uuid', 'exists:App\Models\UsersCurrent,id,deleted_at,NULL'],
                     'permissions' => ['required', 'array', 'min:1'],
-                    'permissions.*' => ['string', 'exists:App\Models\Permission,name'], // @todo name or uuid ??
+                    'permissions.*' => ['string', 'exists:App\Models\Permission,name,deleted_at,NULL'], // @todo name or uuid ??
                 ],
                 $this::$errors,
             );
@@ -130,9 +130,9 @@ class PermissionController extends AbstractCrudController
         try{
             $validator = Validator::make($request->all(),
                 [
-                    'user' => ['required', 'uuid', 'exists:App\Models\User,id'],
+                    'user' => ['required', 'uuid', 'exists:App\Models\UsersCurrent,id,deleted_at,NULL'],
                     'permissions' => ['required', 'array', 'min:1'],
-                    'permissions.*' => ['string', 'exists:App\Models\Permission,name'], // @todo name or uuid ??
+                    'permissions.*' => ['string', 'exists:App\Models\Permission,name,deleted_at,NULL'], // @todo name or uuid ??
                 ],
                 $this::$errors,
             );

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -13,18 +14,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('users_credentials', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('surname');
-            $table->string('taxid')->unique(); // fiscal code
-            $table->enum('gender', ['m', 'f']);
-            $table->date('birth_date');
+            $table->foreignUuid('user_id')->references('id')->on('users_currents')->onDelete('cascade');
+            $table->string('username')->unique();
+            $table->string('password');
+            $table->rememberToken();
 
-            $table->uuid('staff_id')->nullable(); //$table->foreignUuid('staff_id')->nullable()->references('id')->on('users_currents')->onDelete('cascade');
+            $table->foreignUuid('staff_id')->references('id')->on('users_currents')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
-            $table->uuid('users_id')->nullable();
+            $table->uuid('users_credentials_id')->nullable();
             $table->integer('version')->default(1);
         });
     }
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('users_credentials');
     }
 };

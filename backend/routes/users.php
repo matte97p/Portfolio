@@ -10,9 +10,11 @@ use App\Http\Controllers\Concrete\UserController;
 */
 
 Route::group(['prefix' => 'user'], function () {
-    // Route::post('/create', [UserController::class, 'create']);
+    Route::post('/create', [UserController::class, 'create']);
     Route::post('/', [UserController::class, 'read']);
     Route::post('/update', [UserController::class, 'update']);
     Route::post('/delete', [UserController::class, 'delete']);
+
+    Route::post('/list', [UserController::class, 'list']);
 });
 

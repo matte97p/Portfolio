@@ -33,7 +33,7 @@ abstract class AbstractApiController extends AbstractGenericController
      *
      * @throws \Exception
      */
-    public function getClient(): Client
+    private function getClient(): Client
     {
         if( is_null($this->client) ){
             if( empty($this->getBaseUri()) )
@@ -59,7 +59,7 @@ abstract class AbstractApiController extends AbstractGenericController
     /**
      * @param Client $client
      */
-    public function setClient(Client $client): void
+    private function setClient(Client $client): void
     {
         $this->client = $client;
     }
@@ -110,6 +110,8 @@ abstract class AbstractApiController extends AbstractGenericController
             $response = $exception->getResponse();
         } catch ( ConnectException $exception ) {
             $response = $exception->getMessage();
+        } catch ( \Exception $exception ) {
+            $response = $exception->getMessage();
         }
 
         // log response
@@ -153,7 +155,7 @@ abstract class AbstractApiController extends AbstractGenericController
 
         if(isset($options[ RequestOptions::HEADERS ])) $entry_content .= "\nHeaders: " . json_encode($options[ RequestOptions::HEADERS ]);
 
-        $endpoint = $this->getClient()->getConfig('base_uri').$uri;
+        $endpoint = $this->getClient()->getConfig('base_uri') . '/' . $uri;
 
         if( isset($options[RequestOptions::QUERY]) ){
             $endpoint .= '?'.\http_build_query($options[RequestOptions::QUERY],null,'&');

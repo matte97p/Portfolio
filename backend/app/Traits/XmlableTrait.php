@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\XML;
+namespace App\Traits;
 
 /**
  * Class XmlableTrait
