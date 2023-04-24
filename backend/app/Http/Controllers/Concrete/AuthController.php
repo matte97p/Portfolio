@@ -28,8 +28,8 @@ class AuthController extends AbstractApiController
     ];
 
     protected static $base_uri = [
-        0 => 'https://backend-portfolio.com',   //prod
-        1 => 'https://backend-portfolio.test/'  //test
+        0 => 'AUTH_PROD',   //prod
+        1 => 'AUTH_TEST'  //test
     ];
 
     public function __construct(Request $request)
@@ -43,7 +43,7 @@ class AuthController extends AbstractApiController
 
     protected function getBaseUri(): string
     {
-        return self::$base_uri[ (int) $this->test_environment ];
+        return env(self::$base_uri[ (int) $this->test_environment ]);
     }
 
     /**

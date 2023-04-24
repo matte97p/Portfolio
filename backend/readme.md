@@ -3,27 +3,12 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-    <img src="storage/app/public/GitHub-logo.png" alt="Logo" width="80" height="80">
-
-  <h3 align="center">Portfolio</h3>
+    <a href="https://github.com/matte97p/Portfolio">
+        <img src="storage/app/public/matte97.p.svg" alt="Logo" width="500" height="400">
+    </a>
 </div>
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#portfolio">Portfolio</a></li>
-        <li><a href="#namespace">Namespace</a></li>
-        <li><a href="#login">Login</a></li>
-        <li><a href="#controller">Controller</a></li>
-        <li><a href="#uuid">UUID</a></li>
-        <li><a href="#struttura-del-db">Struttura del DB</a></li>
-        <li><a href="#postgresql-inherits">PostgreSQL INHERITS</a></li>
-        <li><a href="#legenda-inherits">Legenda INHERITS</a></li>
-  </ol>
-</details>
-
-## Portfolio
+# Portfolio
 
 > Conoscenze richieste:
 > [Laravel](http://laravel.com/docs);
@@ -76,7 +61,7 @@ Rappresenta lo scheletro del nuovo backend. Leggi il generico README.md di proge
 
 **\*** : i `Modelli` sono autogenerati con l'utilizzo della libreria [Reliese Laravel](https://github.com/reliese/laravel) e vengono aggiornato sulla base della configurazione a DB col comando:
 
-```sh
+```
 php artisan code:models --table=\*\*
 ```
 
@@ -136,7 +121,7 @@ Tutti gli ID del database interno sono gestiti con UUID
 
 -   **`Tabelle Generiche`**
 
-    ```sh
+    ```
     roles -> unione dei figli
     |__
         roles_currents -> Versioni attuali
@@ -152,7 +137,7 @@ Tutti gli ID del database interno sono gestiti con UUID
 > **_NOTE:_** PostgreSQL implementa l'ereditarietà delle tabelle, che può essere uno strumento utile per integrare la gestione Object Oriented nelle logiche di db invece che a BE.
 > [OFFICIAL DOCS](https://www.postgresql.org/docs/9.1/ddl-inherit.html);
 
-```sh
+```
 CREATE TABLE cities (
      name            text,
      population      float,
@@ -172,7 +157,7 @@ CREATE TABLE cities (
 
 ## Legenda INHERITS
 
-```sh
+```
 |__ -> INHERITS
 ```
 
@@ -180,7 +165,7 @@ CREATE TABLE cities (
 
 **Quando una riga a DB viene modificata si attiva un trigger che registra la sua versione precedente alla modifica in una tabella di storico \*\_history.**
 
-```sh
+```
 *_currents -> Versioni attuali del dato.
 *_history -> Versioni passate del dato.
 ```

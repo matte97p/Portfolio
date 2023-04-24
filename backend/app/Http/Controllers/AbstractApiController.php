@@ -155,7 +155,7 @@ abstract class AbstractApiController extends AbstractGenericController
 
         if(isset($options[ RequestOptions::HEADERS ])) $entry_content .= "\nHeaders: " . json_encode($options[ RequestOptions::HEADERS ]);
 
-        $endpoint = $this->getClient()->getConfig('base_uri').$uri;
+        $endpoint = $this->getClient()->getConfig('base_uri') . '/' . $uri;
 
         if( isset($options[RequestOptions::QUERY]) ){
             $endpoint .= '?'.\http_build_query($options[RequestOptions::QUERY],null,'&');
