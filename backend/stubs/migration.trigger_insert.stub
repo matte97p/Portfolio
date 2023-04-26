@@ -1,0 +1,48 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        DB::unprepared("
+            CREATE OR REPLACE FUNCTION on_{{ table }}_insert ()
+                RETURNS TRIGGER
+                LANGUAGE plpgsql
+            AS \$function\$
+            BEGIN
+                INSERT INTO {{ table }}_currents values (new.*);
+                RETURN null;
+            END;
+            \$function\$
+        ");
+
+        DB::unprepared("
+            CREATE TRIGGER on_{{ table }}_insert_trigger
+            BEFORE INSERT ON {{ table }}
+            FOR EACH ROW EXECUTE PROCEDURE on_{{ table }}_insert();
+        ");
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        DB::unprepared("DROP FUNCTION IF EXISTS on_{{ table }}_insert() CASCADE");
+
+        DB::unprepared("
+            DROP TRIGGER IF EXISTS on_{{ table }}_insert_trigger
+            ON {{ table }} CASCADE;
+        ");
+    }
+};

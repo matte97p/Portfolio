@@ -128,6 +128,12 @@ Tutti gli ID del database interno sono gestiti con UUID
         roles_history -> Versioni passate
     ```
 
+    > Comandi per generare le migration:
+
+    > [roles](#new-table)
+
+    > [current e history](#basic-inherits-tables) + [trigger insert](#trigger-insert) + [trigger update](#trigger-update)
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
@@ -168,6 +174,38 @@ CREATE TABLE cities (
 ```
 *_currents -> Versioni attuali del dato.
 *_history -> Versioni passate del dato.
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Migration Command
+
+**Per creare la struttura di base di una migration utilizzare i comandi qua di seguito e poi customizzare dove necessario.**
+
+### New Table
+
+```
+php artisan make:table table_name
+```
+
+### Basic Inherits Tables
+
+```
+php artisan make:inherits table_name
+```
+
+### Trigger Insert
+
+```
+php artisan make:trigger_i table_name
+```
+
+### Trigger Update
+
+```
+php artisan make:trigger_u table_name
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
