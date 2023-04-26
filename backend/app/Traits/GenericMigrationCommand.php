@@ -66,7 +66,9 @@ trait GenericMigrationCommand
     protected function getStubVariables()
     {
         return [
-            '{{ table }}' => $this->tableName() ?? '{{ table }}',
+            '{{ table }}' => $this->lowerField('table') ?? '{{ table }}',
+            '{{ university }}' => $this->lowerField('university') ?? '{{ university }}',
+            '{{ taxid }}' => $this->upperField('taxid') ?? '{{ taxid }}',
         ];
     }
 
@@ -106,12 +108,26 @@ trait GenericMigrationCommand
     }
 
     /**
-     * Get the lower table
+     * Get field lower
+     *
+     * @var string $field
      *
      * @return string
      */
-    protected function tableName()
+    protected function lowerField($field)
     {
-        return (array_key_exists('table', $this->arguments())) ? strtolower($this->argument('table')) : '';
+        return (array_key_exists($field, $this->arguments())) ? strtolower($this->argument($field)) : '';
+    }
+
+    /**
+     * Get field upper
+     *
+     * @var string $field
+     *
+     * @return string
+     */
+    protected function upperField($field)
+    {
+        return (array_key_exists($field, $this->arguments())) ? strtoupper($this->argument($field)) : '';
     }
 }
