@@ -5,11 +5,11 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Filesystem\Filesystem;
-use App\Traits\BasicMigrationCommand;
+use App\Traits\GenericMigrationCommand;
 
 class MakeMigrationTable extends Command
 {
-    use BasicMigrationCommand;
+    use GenericMigrationCommand;
 
     /**
      * The table and signature of the console command.
@@ -59,6 +59,6 @@ class MakeMigrationTable extends Command
      */
     protected function getSourceFilePath()
     {
-        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . strtolower($this->argument('table')) . '_table.php';
+        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . $this->tableName() . '_table.php';
     }
 }

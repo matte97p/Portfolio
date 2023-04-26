@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Filesystem\Filesystem;
 
-trait BasicMigrationCommand
+trait GenericMigrationCommand
 {
     /**
      * Execute the console command.
@@ -66,7 +66,7 @@ trait BasicMigrationCommand
     protected function getStubVariables()
     {
         return [
-            '{{ table }}' => strtolower($this->argument('table')) ?? '{{ table }}',
+            '{{ table }}' => $this->tableName() ?? '{{ table }}',
         ];
     }
 
@@ -103,5 +103,15 @@ trait BasicMigrationCommand
     protected function getDatePrefix()
     {
         return date('Y_m_d_His');
+    }
+
+    /**
+     * Get the lower table
+     *
+     * @return string
+     */
+    protected function tableName()
+    {
+        return (array_key_exists('table', $this->arguments())) ? strtolower($this->argument('table')) : '';
     }
 }

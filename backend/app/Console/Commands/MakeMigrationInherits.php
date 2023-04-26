@@ -5,25 +5,25 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Filesystem\Filesystem;
-use App\Traits\BasicMigrationCommand;
+use App\Traits\GenericMigrationCommand;
 
-class MakeMigrationInherit extends Command
+class MakeMigrationInherits extends Command
 {
-    use BasicMigrationCommand;
+    use GenericMigrationCommand;
 
     /**
      * The table and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:inherit {table}';
+    protected $signature = 'make:inherits {table}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create inherit table Migration';
+    protected $description = 'Create inherits table Migration';
 
     /**
      * Filesystem instance
@@ -59,6 +59,6 @@ class MakeMigrationInherit extends Command
      */
     protected function getSourceFilePath()
     {
-        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . strtolower($this->argument('table')) . '_inherits_table.php';
+        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . $this->tableName() . '_inherits_table.php';
     }
 }
