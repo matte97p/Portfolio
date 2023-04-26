@@ -58,6 +58,6 @@ class MakeMigrationTriggerInsert extends Command
      */
     protected function getSourceFilePath()
     {
-        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . $this->tableName() . '_insert_trigger.php';
+        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . $this->lowerField('table') . '_insert_trigger.php';
     }
 }

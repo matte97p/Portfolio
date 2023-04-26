@@ -59,6 +59,6 @@ class MakeMigrationTriggerUpdate extends Command
      */
     protected function getSourceFilePath()
     {
-        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . $this->tableName() . '_update_trigger.php';
+        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . $this->lowerField('table') . '_update_trigger.php';
     }
 }

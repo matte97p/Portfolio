@@ -59,6 +59,6 @@ class MakeMigrationInherits extends Command
      */
     protected function getSourceFilePath()
     {
-        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . $this->tableName() . '_inherits_table.php';
+        return __DIR__ . '/../../../database/migrations/' . $this->getDatePrefix() . '_create_' . $this->lowerField('table') . '_inherits_table.php';
     }
 }
