@@ -3,16 +3,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-    <a href="https://github.com/matte97p/CloudCare">
+    <a href="https://github.com/matte97p/Portfolio">
         <img src="storage/app/public/matte97.p.svg" alt="Logo" width="500" height="400">
     </a>
 </div>
 
-# CloudCare
+# Portfolio
 
 > Conoscenze richieste:
 > [Laravel](http://laravel.com/docs);
-> [MySQL](https://www.mysql.org/docs/);
+> [PostgreSQL](https://www.postgresql.org/docs/);
 
 Rappresenta lo scheletro del nuovo backend. Leggi il generico README.md di progetto per avere maggiori informazioni.
 
@@ -111,6 +111,102 @@ Tutti gli ID del database interno sono gestiti con UUID
 ---
 
 ## Struttura del DB
+
+> Conoscenze richieste:
+> [PostgreSQL Inherits](#postgresql-inherits);
+
+**L'ereditarietà è un concetto fondamentale per struttura scelta:**
+
+[LEGENDA](#legenda-inherits)
+
+-   **`Tabelle Generiche`**
+
+    ```
+    roles -> unione dei figli
+    |__
+        roles_currents -> Versioni attuali
+        roles_history -> Versioni passate
+    ```
+
+    > Comandi per generare le migration:
+
+    > [roles](#new-table)
+
+    > [current e history](#basic-inherits-tables) + [trigger insert](#trigger-insert) + [trigger update](#trigger-update)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## PostgreSQL INHERITS
+
+> **_NOTE:_** PostgreSQL implementa l'ereditarietà delle tabelle, che può essere uno strumento utile per integrare la gestione Object Oriented nelle logiche di db invece che a BE.
+> [OFFICIAL DOCS](https://www.postgresql.org/docs/9.1/ddl-inherit.html);
+
+```
+CREATE TABLE cities (
+     name            text,
+     population      float,
+     altitude        int
+ );
+
+ CREATE TABLE capitals (
+     state           char(2)
+ ) INHERITS (cities);
+```
+
+**Il comando INHERITS permette alla tabella `capitals` di ereditare tutte le colonne di `cities`.**
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Legenda INHERITS
+
+```
+|__ -> INHERITS
+```
+
+**`VERSIONI`**
+
+**Quando una riga a DB viene modificata si attiva un trigger che registra la sua versione precedente alla modifica in una tabella di storico \*\_history.**
+
+```
+*_currents -> Versioni attuali del dato.
+*_history -> Versioni passate del dato.
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Migration Command
+
+**Per creare la struttura di base di una migration utilizzare i comandi qua di seguito e poi customizzare dove necessario.**
+
+### New Table
+
+```
+php artisan make:table table_name
+```
+
+### Basic Inherits Tables
+
+```
+php artisan make:inherits table_name
+```
+
+### Trigger Insert
+
+```
+php artisan make:trigger_i table_name
+```
+
+### Trigger Update
+
+```
+php artisan make:trigger_u table_name
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

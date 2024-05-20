@@ -23,10 +23,10 @@
 
 ### Prerequisites
 
-- [MYSQLSQL][mysql-download]
+- [PostgreSQL][postgresql-download]
 - [php8.2][php8.2-download]
   ```
-  LINUX -> sudo apt install php8.2-fpm
+  LINUX -> sudo apt install php8.0-fpm
   ```
 - [composer][composer-download]
 
@@ -157,6 +157,69 @@
   ng add @angular/material
   ```
 
+### Installation
+
+1. Clone the repo
+   ```
+   git clone https://github.com/matte97p/Portfolio.git
+   ```
+2. Install packages into cd project_dir
+   ```
+   /backend -> composer install
+   /frontend -> npm install
+   ```
+3. Create DB and upload [DB Backup][]
+
+   ```
+   sudo -u postgres psql
+   CREATE DATABASE portfolio;
+   CREATE USER mario with PASSWORD 'rossi';
+   ALTER USER mario WITH PASSWORD 'rossi'; --se già creato
+   GRANT ALL PRIVILEGES ON DATABASE portfolio to mario;
+
+   -- on db
+   CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; -- for uuid_generate_v4()
+
+   php artisan migrate
+   php artisan vendor:publish --tag=passport-migrations
+   php artisan vendor:publish --tag=telescope-migrations
+   ```
+
+4. Create and start the web server for https://backend-portfolio.test/
+
+   ```
+   valet link backend-portfolio
+   valet secure backend-portfolio
+   ```
+
+5. Run passport OAuth2 Client [read more][https://laravel.com/docs/10.x/passport]
+
+   ```
+   php artisan passport:client --password
+   named LocalClient eg
+   ```
+
+6. Start the web server for http://localhost:8000/
+
+   ```
+   php artisan serve
+   ```
+
+7. Go to /angular Start the web server for http://localhost:4200/
+
+   ```
+   ng serve
+   ```
+
+8. Take a minute, go on your backend dir and do that before start programming
+   ```
+   php artisan inspire
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- Coding Guide Line -->
+
 ## Coding Guidelines
 
 [PSR 12 DOCS][psr12-docs]
@@ -180,7 +243,7 @@ Each guideline describes either a good or bad practice, and all have a consisten
 
 <!-- DOWNLOAD -->
 
-[mysql-download]: https://www.mysql.org/download/
+[postgresql-download]: https://www.postgresql.org/download/
 [php8.2-download]: https://www.php.net/downloads.php
 [composer-download]: https://getcomposer.org/download/
 [laravel10-download]: https://laravel.com/docs/10.x/installation
